@@ -1,0 +1,2 @@
+DirectoryIndex index.thc index.html index.php
+AddHandler cgi-script .thc
