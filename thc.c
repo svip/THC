@@ -1,21 +1,13 @@
-#ifndef UTIL_H
-#define UTIL_H
+#include "thc.h"
 
-#include <stdarg.h>
-#include <stdio.h>
-#include <stdlib.h>
-
-#define UNUSED(x) (x=x)
-
-struct attr {
-  const char *key;
-  const char *val;
-};
-
-struct list {
-  void *data;
-  struct list *next;
-};
+int main(int argc, char** argv) {
+  printf("HTTP/1.1 200 OK\r\n");
+  printf("Server: THC %s\r\n", THC_VERSION);
+  printf("Content-type: text/html\r\n");
+  printf("Cache-control: max-age=3600\r\n");
+  printf("\r\n");
+  return pagemain(argc, argv);
+}
 
 struct list* list_cons(void* data, struct list *list) {
   struct list *new_cons = malloc(sizeof(struct list));
@@ -23,22 +15,6 @@ struct list* list_cons(void* data, struct list *list) {
   new_cons->next = list;
   return new_cons;
 }
-
-enum node_type { TEXT, TAG };
-
-struct tag_node {
-  const char *name;
-  struct list *attrs;
-  struct list *children;
-};
-
-struct node {
-  char type;
-  union {
-    struct tag_node tag;
-    const char *text;
-  } data;
-};
 
 struct node* mktagnode(const char *name, va_list vl) {
   char *key, *val;
@@ -96,12 +72,6 @@ void print_tree(struct node *tree, int depth) {
     printf("</%s>\n", tree->data.tag.name);
   }
 }
-
-struct html_builder {
-  struct list *stack;
-  struct node *top_node;
-  struct list **last_node;
-};
 
 int html_builder_init(struct html_builder *builder,
                       const char *name,
@@ -168,7 +138,3 @@ void insert_text(struct html_builder *builder,
     *(builder->last_node) = list_cons(new_node, NULL);
   }
 }
-
-
-
-#endif

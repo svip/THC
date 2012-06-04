@@ -1,7 +1,7 @@
 include config.mk
 
 PAGES = index.thc subpage.thc
-SRC = ${PAGES:.thc=.c} boilerplate.c
+SRC = ${PAGES:.thc=.c} thc.c
 OBJ = ${SRC:.c=.o}
 
 all: ${PAGES}
@@ -16,8 +16,8 @@ options:
 	@echo CC -c $<
 	@${CC} -c $< ${CFLAGS}
 
-%.thc: %.o boilerplate.o
-	${CC} -o $@ $< boilerplate.o ${CFLAGS}
+%.thc: %.o thc.o
+	${CC} -o $@ $< thc.o ${CFLAGS}
 
 ${OBJ}: config.mk
 

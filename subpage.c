@@ -1,5 +1,5 @@
-#include "boilerplate.h"
-#include "util.h"
+#include "thc.h"
+
 
 #include <stdio.h>
 
