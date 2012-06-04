@@ -5,17 +5,17 @@
 
 int pagemain(int argc, char** argv) {
   struct html_builder builder;
-  html_builder_init(&builder, mktagnode("html", "version", "bad", NULL));
+  html_builder_init(&builder, "html", "version", "bad", NULL);
   UNUSED(argc);
   UNUSED(argv);
 
-  enter_tag(&builder, mktagnode("head", NULL));
-  enter_tag(&builder, mktagnode("title", NULL));
+  enter_tag(&builder, "head", NULL);
+  enter_tag(&builder, "title", NULL);
   insert_text(&builder, "Index page!");
   leave_tag(&builder);
   leave_tag(&builder);
-  enter_tag(&builder, mktagnode("body", NULL));
-  enter_tag(&builder, mktagnode("p", NULL));
+  enter_tag(&builder, "body", NULL);
+  enter_tag(&builder, "p", NULL);
   insert_text(&builder, "Hej!");
   leave_tag(&builder);
   leave_tag(&builder);

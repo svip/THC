@@ -40,13 +40,11 @@ struct node {
   } data;
 };
 
-struct node* mktagnode(const char *name, ...) {
+struct node* mktagnode(const char *name, va_list vl) {
   char *key, *val;
   struct list *list = NULL;
   struct list *cons;
   struct node *node;
-  va_list vl;
-  va_start(vl,name);
 
   for (key=va_arg(vl,char*); key; key=va_arg(vl,char*)) {
     val=va_arg(vl,char*);
@@ -106,10 +104,12 @@ struct html_builder {
 };
 
 int html_builder_init(struct html_builder *builder,
-                      struct node *root) {
-  if (root->type != TAG) {
-    return -1;
-  }
+                      const char *name,
+                      ...) {
+  va_list vl;
+  struct node *root;
+  va_start(vl,name);
+  root = mktagnode(name, vl);
 
   builder->stack = NULL;
   builder->top_node = root;
@@ -118,8 +118,14 @@ int html_builder_init(struct html_builder *builder,
 }
 
 void enter_tag(struct html_builder *builder,
-               struct node *new_node) {
-  struct list *new_cons = list_cons(new_node, NULL);
+               const char *name,
+               ...) {
+  struct node *new_node;
+  struct list *new_cons;
+  va_list vl;
+  va_start(vl,name);
+  new_node = mktagnode(name, vl);
+  new_cons = list_cons(new_node, NULL);
   if (*builder->last_node) {
     (*builder->last_node)->next = new_cons;
   } else {
@@ -135,9 +141,19 @@ void leave_tag(struct html_builder *builder) {
 }
 
 void append_tag(struct html_builder *builder,
-                struct node *new_node) {
-  enter_tag(builder, new_node);
-  leave_tag(builder);
+                const char *name,
+                ...) {
+  struct node *new_node;
+  struct list *new_cons;
+  va_list vl;
+  va_start(vl,name);
+  new_node = mktagnode(name, vl);
+  new_cons = list_cons(new_node, NULL);
+  if (*builder->last_node) {
+    (*builder->last_node)->next = new_cons;
+
+  }
+  (*builder->last_node) = new_cons;
 }
 
 void insert_text(struct html_builder *builder,
@@ -152,5 +168,7 @@ void insert_text(struct html_builder *builder,
     *(builder->last_node) = list_cons(new_node, NULL);
   }
 }
+
+
 
 #endif
