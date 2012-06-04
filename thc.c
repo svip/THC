@@ -6,6 +6,7 @@ int main(int argc, char** argv) {
   printf("Content-type: text/html; charset=utf-8\r\n");
   printf("Cache-control: max-age=3600\r\n");
   printf("\r\n");
+  printf("<!doctype html>\r\n");
   return pagemain(argc, argv);
 }
 
@@ -62,14 +63,18 @@ void print_tree(struct node *tree, int depth) {
       printf("\"");
       list = list->next;
     }
-    printf(">\n");
-    list = tree->data.tag.children;
-    while (list) {
-      print_tree((struct node*)list->data, depth+2);
-      list = list->next;
+    if ( tree->data.tag.children == NULL )
+      printf(" />\n");
+    else {
+      printf(">\n");
+      list = tree->data.tag.children;
+      while (list) {
+        print_tree((struct node*)list->data, depth+2);
+        list = list->next;
+      }
+      pad(depth);
+      printf("</%s>\n", tree->data.tag.name);
     }
-    pad(depth);
-    printf("</%s>\n", tree->data.tag.name);
   }
 }
 
