@@ -203,3 +203,19 @@ void webpage_end(struct html_builder *builder) {
   leave_tag(builder); /* footer#footer */
   leave_tag(builder); /* body */
 }
+
+void webpage_youtubeembed(struct html_builder *builder,
+                          const char* watchid,
+                          const int width,
+                          const int height) {
+  char *url = malloc(64);
+  char *strwidth = malloc(4);
+  char *strheight = malloc(4);
+  sprintf(url, "http://www.youtube.com/embed/%s", watchid);
+  sprintf(strwidth, "%d", width);
+  sprintf(strheight, "%d", height);
+  enter_tag(builder, "iframe", "width", strwidth, "height", strheight,
+    "src", url, "frameborder", "0", "allowfullscreen", "true", NULL);
+  insert_text(builder, "");
+  leave_tag(builder); /* iframe */
+}

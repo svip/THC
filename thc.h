@@ -69,4 +69,9 @@ void webpage_start(struct html_builder *builder,
 
 void webpage_end(struct html_builder *builder);
 
+void webpage_youtubeembed(struct html_builder *builder,
+                          const char* watchid,
+                          const int width,
+                          const int height);
+
 #endif
