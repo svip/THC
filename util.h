@@ -1,6 +1,7 @@
 #ifndef UTIL_H
 #define UTIL_H
 
+#include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -38,6 +39,32 @@ struct node {
     const char *text;
   } data;
 };
+
+struct node* mktagnode(const char *name, ...) {
+  char *key, *val;
+  struct list *list = NULL;
+  struct list *cons;
+  struct node *node;
+  va_list vl;
+  va_start(vl,name);
+
+  for (key=va_arg(vl,char*); key; key=va_arg(vl,char*)) {
+    val=va_arg(vl,char*);
+    cons=malloc(sizeof(struct list));
+    cons->data = malloc(sizeof(struct attr));
+    ((struct attr*)cons->data)->key = key;
+    ((struct attr*)cons->data)->val = val;
+    cons->next = list;
+    list = cons;
+  }
+  va_end(vl);
+  node = malloc(sizeof(struct node));
+  node->type = TAG;
+  node->data.tag.name = name;
+  node->data.tag.attrs = list;
+  node->data.tag.children = NULL;
+  return node;
+}
 
 void pad(int depth) {
   while (depth--) {
@@ -78,28 +105,21 @@ struct html_builder {
   struct list **last_node;
 };
 
-void html_builder_init(struct html_builder *builder,
-                       const char* name,
-                       struct list *attrs) {
-  struct node *new_node = malloc(sizeof(struct node));
-  new_node->type = TAG;
-  new_node->data.tag.name = name;
-  new_node->data.tag.attrs = attrs;
-  new_node->data.tag.children = NULL;
+int html_builder_init(struct html_builder *builder,
+                      struct node *root) {
+  if (root->type != TAG) {
+    return -1;
+  }
+
   builder->stack = NULL;
-  builder->top_node = new_node;
-  builder->last_node = &(new_node->data.tag.children);
+  builder->top_node = root;
+  builder->last_node = &(root->data.tag.children);
+  return 0;
 }
 
 void enter_tag(struct html_builder *builder,
-               const char* name,
-               struct list *attrs) {
-  struct node *new_node = malloc(sizeof(struct node));
+               struct node *new_node) {
   struct list *new_cons = list_cons(new_node, NULL);
-  new_node->type = TAG;
-  new_node->data.tag.name = name;
-  new_node->data.tag.attrs = attrs;
-  new_node->data.tag.children = NULL;
   if (*builder->last_node) {
     (*builder->last_node)->next = new_cons;
   } else {
@@ -115,9 +135,8 @@ void leave_tag(struct html_builder *builder) {
 }
 
 void append_tag(struct html_builder *builder,
-                const char* name,
-                struct list *attrs) {
-  enter_tag(builder, name, attrs);
+                struct node *new_node) {
+  enter_tag(builder, new_node);
   leave_tag(builder);
 }
 
