@@ -138,3 +138,29 @@ void insert_text(struct html_builder *builder,
     *(builder->last_node) = list_cons(new_node, NULL);
   }
 }
+
+/* The 'template' system for the webpage. */
+
+void webpage_start(struct html_builder *builder,
+                   const char* title) {
+  char *newtitle = malloc(64);
+  if ( title == NULL )
+    newtitle = "topDatamat";
+  else
+    sprintf(newtitle, "topDatamat / %s", title);
+  
+  html_builder_init(builder, "html", NULL);
+  
+  enter_tag(builder, "head", NULL);
+  enter_tag(builder, "title", NULL);
+  insert_text(builder, newtitle);
+  leave_tag(builder); /* title */
+  enter_tag(builder, "link", "href", "/media/styles.css", "rel", "stylesheet", NULL);
+  leave_tag(builder); /* link */
+  leave_tag(builder); /* head */
+  enter_tag(builder, "body", NULL);
+}
+
+void webpage_end(struct html_builder *builder) {
+  leave_tag(builder); /* body */
+}
