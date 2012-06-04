@@ -1,0 +1,166 @@
+body {
+	font-family: "DejaVu Sans", sans-serif;
+	background: #eee;
+	color: #222;
+	margin: 0;
+	padding: 0;
+}
+
+a {
+	color: #2c8be2;
+}
+a:hover {
+	color: #2cb7e2;
+	text-decoration: none;
+}
+
+header#header {
+	background: #000 url(fan.png) no-repeat 10px 25px;
+	color: #fff;
+	margin: 0;
+	padding: 25px 40px 21px;
+	border-bottom: 1px solid #444;
+}
+header#header h1 {
+	font-family: "DejaVu Monospace", monospace;
+	font-style: italic;
+}
+#indbakken {
+	float: right;
+	font-size: 80%;
+	text-align: right;
+}
+#indbakken a {
+	font-size: 120%;
+	font-weight: bold;
+	color: #55e;
+}
+#menu {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	margin-left: 25px;
+}
+#menu li {
+	float: left;
+	margin-bottom: 0px;
+	margin-top: 0px;
+}
+#menu li a {
+	color: #eee;
+	text-decoration: none;
+	margin-right: 10px;
+	padding: 2px 15px;
+	background: #222;
+	border: 1px solid #444;
+	border-bottom: 1px solid #444;
+}
+#menu li.highlighted a {
+	background: #eee;
+	color: #222;
+	border-color: #888;
+	border-bottom-color: #eee;
+}
+#menu li a:hover {
+	background: #ddd;
+	color: #222;
+	border-color: #444;
+	border-bottom-color: #444;
+}
+#menu li.highlighted a:hover {
+	border-bottom-color: #eee;
+}
+
+#content {
+	padding: 5px 20px;
+}
+
+fieldset {
+	border: 1px solid #fff;
+	background: #bbb;
+	width: 60%;
+	margin: 0 auto;
+}
+fieldset p {
+	margin: 0;
+	font-size: 90%;
+}
+input, textarea, label {
+	float: left;
+	width: 100%;
+}
+input[type=submit] {
+	width: auto;
+	float: right;
+	background: #2c8be2;
+	border-color: #2c8be2;
+	color: #fff;
+	font-weight: bold;
+}
+input, textarea {
+	border: 1px solid #fff;
+	background: #eee;
+}
+input:focus, textarea:focus {
+	background: #fff;
+	border-color: #aaa;
+}
+input[type=submit]:focus {
+	background: #2c8be2;
+}
+.formerror {
+	color: #a00;
+	font-weight: bold;
+}
+
+article.episode {
+	clear: both;
+}
+article.episode article {
+	float: left;
+	margin-right: 25px;
+}
+
+#dictionary dl.dictionary {
+	/*-moz-column-width: 300px;
+	-webkit-column-width: 300px;
+	column-width: 300px;*/
+}
+#dictionary dt {
+	font-weight: bold;
+}
+#dictionary dd {
+	margin-bottom: 5px;
+	font-style: italic;
+}
+#dictionary dd span {
+	font-style: normal;
+}
+#dictionary .dictionary-block {
+	border-top: 1px solid #aaa;
+}
+ul.toc {
+	list-style: square;
+	margin-left: 5px;
+	padding-left: 15px;
+	margin-top: 0;
+}
+
+article.emailconversation {
+	border-left: 15px #aaa solid;
+	padding-left: 5px;
+}
+article.email h2 {
+	font-size: 100%;
+	margin-top: -20px;
+}
+
+footer#footer {
+	clear: both;
+	margin: 0 auto;
+	width: 95%;
+	padding: 5px 0px;
+	font-size: 80%;
+	text-align: right;
+	border-top: 1px #aaa solid;
+}

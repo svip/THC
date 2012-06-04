@@ -159,8 +159,42 @@ void webpage_start(struct html_builder *builder,
   leave_tag(builder); /* link */
   leave_tag(builder); /* head */
   enter_tag(builder, "body", NULL);
+  enter_tag(builder, "header", "id", "header", NULL);
+  enter_tag(builder, "div", "id", "languages", NULL);
+  leave_tag(builder); /* div#languages */
+  enter_tag(builder, "div", "id", "indbakken", NULL);
+  insert_text(builder, "Send dine spørgsmål til ");
+  enter_tag(builder, "a", "href", "mailto:indbakken@topdatamat.dk", NULL);
+  insert_text(builder, "indbakken@topdatamat.dk");
+  leave_tag(builder); /* a */
+  insert_text(builder, ",");
+  enter_tag(builder, "br", NULL);
+  leave_tag(builder); /* br */
+  insert_text(builder, "så svarer Troels måske på dem.");
+  leave_tag(builder); /* div#indbakken */
+  enter_tag(builder, "h1", NULL);
+  insert_text(builder, "topDatamat");
+  leave_tag(builder); /* h1 */
+  enter_tag(builder, "ul", "id", "menu", NULL);
+  /*
+    TODO: Generate the following from a list defined above.
+  */
+  enter_tag(builder, "li", "class", "highlighted", NULL);
+  enter_tag(builder, "a", "href", "./", NULL);
+  insert_text(builder, "Forsiden");
+  leave_tag(builder); /* a */
+  leave_tag(builder); /* li */
+  leave_tag(builder); /* ul#menu */
+  leave_tag(builder); /* header */
+  enter_tag(builder, "div", "id", "content", NULL);
 }
 
 void webpage_end(struct html_builder *builder) {
+  leave_tag(builder); /* div#content */
+  enter_tag(builder, "footer", "id", "footer", NULL);
+  enter_tag(builder, "p", NULL);
+  insert_text(builder, "Denne hjemmeside er skrevet i C.");
+  leave_tag(builder); /* p */
+  leave_tag(builder); /* footer#footer */
   leave_tag(builder); /* body */
 }
