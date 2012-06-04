@@ -12,6 +12,10 @@ options:
 	@echo "LDFLAGS  = ${LDFLAGS}"
 	@echo "CC       = ${CC}"
 
+install: ${PAGES}
+	@echo "installing to www/"
+	@mv ${PAGES} www
+
 .c.o:
 	@echo CC -c $<
 	@${CC} -c $< ${CFLAGS}
