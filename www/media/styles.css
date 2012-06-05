@@ -59,6 +59,10 @@ header#header h1 {
 	border: 1px solid #444;
 	border-bottom: 1px solid #444;
 }
+#site-fatal #menu li a {
+	background: #d22;
+	border-color: #f00;
+}
 #menu li.highlighted a {
 	background: #eee;
 	color: #222;
@@ -70,6 +74,11 @@ header#header h1 {
 	color: #222;
 	border-color: #444;
 	border-bottom-color: #444;
+}
+#site-fatal #menu li a:hover {
+	background: #411;
+	color: #d22;
+	border-color: #f00;
 }
 #menu li.highlighted a:hover {
 	border-bottom-color: #eee;
