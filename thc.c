@@ -2,6 +2,7 @@
 
 #include <unistd.h>
 #include <signal.h>
+#include <time.h>
 
 void insert_row(struct html_builder *builder,
                 char *row_name,
@@ -63,6 +64,16 @@ void signal_handler(int signal, siginfo_t *info, void *context) {
   insert_row(&builder, "Process id", tmp);
   tmp = malloc(32); sprintf(tmp, "%d", info->si_uid);
   insert_row(&builder, "User id", tmp);
+  tmp = malloc(32); sprintf(tmp, "%d", info->si_status);
+  insert_row(&builder, "Exit status", tmp);
+  tmp = malloc(32); sprintf(tmp, "%f", ((float)info->si_utime/CLOCKS_PER_SEC));
+  insert_row(&builder, "User time", tmp);
+  tmp = malloc(32); sprintf(tmp, "%f", ((float)info->si_stime/CLOCKS_PER_SEC));
+  insert_row(&builder, "System time", tmp);
+  /*tmp = malloc(32); sprintf(tmp, "%f", (float)info->si_value);
+  insert_row(&builder, "Signal value", tmp);*/
+  tmp = malloc(32); sprintf(tmp, "%d", info->si_int);
+  insert_row(&builder, "POSIX signal", tmp);
   leave_tag(&builder); /* tbody */
   leave_tag(&builder); /* table */
   leave_tag(&builder); /* article */
