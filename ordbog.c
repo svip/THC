@@ -3,11 +3,9 @@
 #include <stdio.h>
 
 struct term {
-  struct {
-    char *term;
-    char *abbr;
-    char *prefix;
-  } data;
+  char *term;
+  char *abbr;
+  char *prefix;
   struct term *first_translation;
   struct term *next_term;
 };
@@ -34,22 +32,22 @@ struct term* mkterm(va_list vl) {
     if ( mode == 0 ) {
       if ( first_term == NULL ) {
         first_term = malloc(sizeof(struct term));
-        first_term->data.term = val;
+        first_term->term = val;
         prev_term = first_term;
       } else {
         term = malloc(sizeof(struct term));
-        term->data.term = val;
+        term->term = val;
         prev_term->next_term = term;
         prev_term = term;
       }
     } else {
       if ( first_trans == NULL ) {
         first_trans = malloc(sizeof(struct term));
-        first_trans->data.term = val;
+        first_trans->term = val;
         prev_trans = first_trans;
       } else {
         trans = malloc(sizeof(struct term));
-        trans->data.term = val;
+        trans->term = val;
         prev_trans->next_term = trans;
         prev_trans = trans;
       }
@@ -168,10 +166,10 @@ int pagemain(int argc, char** argv) {
   enter_tag(&builder, "dl", "class", "dictionary", NULL);
   while ( term ) {
     enter_tag(&builder, "dt", NULL);
-    insert_text(&builder, term->data.term);
+    insert_text(&builder, term->term);
     leave_tag(&builder); /* dt */
     enter_tag(&builder, "dd", NULL);
-    insert_text(&builder, term->first_translation->data.term);
+    insert_text(&builder, term->first_translation->term);
     leave_tag(&builder); /* dd */
     term = term->next_term;
   }
