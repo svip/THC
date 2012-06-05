@@ -20,19 +20,16 @@ struct list* list_cons(void* data, struct list *list) {
 struct node* mktagnode(const char *name, va_list vl) {
   char *key, *val;
   struct list *list = NULL;
-  struct list *cons;
-  struct node *node;
-
+  struct node *node = NULL;
   for (key=va_arg(vl,char*); key; key=va_arg(vl,char*)) {
+    struct list *cons = malloc(sizeof(struct list));
     val=va_arg(vl,char*);
-    cons=malloc(sizeof(struct list));
     cons->data = malloc(sizeof(struct attr));
     ((struct attr*)cons->data)->key = key;
     ((struct attr*)cons->data)->val = val;
     cons->next = list;
     list = cons;
   }
-  va_end(vl);
   node = malloc(sizeof(struct node));
   node->type = TAG;
   node->data.tag.name = name;
@@ -85,6 +82,7 @@ int html_builder_init(struct html_builder *builder,
   struct node *root;
   va_start(vl,name);
   root = mktagnode(name, vl);
+  va_end(vl);
 
   builder->stack = NULL;
   builder->top_node = root;
@@ -100,13 +98,15 @@ void enter_tag(struct html_builder *builder,
   va_list vl;
   va_start(vl,name);
   new_node = mktagnode(name, vl);
+  va_end(vl);
   new_cons = list_cons(new_node, NULL);
   if (*builder->last_node) {
     (*builder->last_node)->next = new_cons;
+    builder->last_node = &new_cons->next;
   } else {
-    (*builder->last_node) = new_cons;
+    *builder->last_node = new_cons;
   }
-  builder->stack = list_cons(&(new_cons->next), builder->stack);
+  builder->stack = list_cons(builder->last_node, builder->stack);
   builder->last_node = &new_node->data.tag.children;
 }
 
@@ -123,10 +123,10 @@ void append_tag(struct html_builder *builder,
   va_list vl;
   va_start(vl,name);
   new_node = mktagnode(name, vl);
+  va_end(vl);
   new_cons = list_cons(new_node, NULL);
   if (*builder->last_node) {
     (*builder->last_node)->next = new_cons;
-
   }
   (*builder->last_node) = new_cons;
 }
@@ -138,7 +138,7 @@ void insert_text(struct html_builder *builder,
   new_node->data.text = text;
   if (*(builder->last_node)) {
     (*builder->last_node)->next = list_cons(new_node, NULL);
-    builder->last_node = &((*builder->last_node)->next);
+    builder->last_node = &((*builder->last_node)->next->next);
   } else {
     *(builder->last_node) = list_cons(new_node, NULL);
   }
