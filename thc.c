@@ -1,8 +1,32 @@
 #include "thc.h"
 
+#include <unistd.h>
+#include <signal.h>
+
+void signal_handler(int signal, siginfo_t *info, void *context) {
+  char *error;
+  UNUSED(info);
+  UNUSED(context);
+  switch (signal) {
+  case SIGSEGV:
+    error = "Segmentation fault";
+    break;
+  case SIGBUS:
+    error = "Bus error";
+    break;
+  default:
+    error = "Unhandled exception";
+  }
+  printf("<html><h1>%s</h1></html>\r\n", error);
+  exit(1);
+}
+
 int main(int argc, char** argv) {
-/*  printf("HTTP/1.1 200 OK\r\n");
-  printf("Server: THC %s\r\n", THC_VERSION);*/
+  struct sigaction action;
+  action.sa_sigaction = signal_handler;
+  action.sa_flags = SA_SIGINFO;
+  sigemptyset(&action.sa_mask);
+  sigaction(SIGSEGV, &action, NULL);
   printf("Content-type: text/html; charset=utf-8\r\n");
   printf("Cache-control: max-age=3600\r\n");
   printf("\r\n");
