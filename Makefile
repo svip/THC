@@ -1,6 +1,6 @@
 include config.mk
 
-PAGES = index.thc subpage.thc
+PAGES = index.thc om.thc
 SRC = ${PAGES:.thc=.c} thc.c
 OBJ = ${SRC:.c=.o}
 
