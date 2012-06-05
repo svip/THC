@@ -22,7 +22,8 @@ header#header {
 	border-bottom: 1px solid #444;
 }
 #page-fatal header#header {
-	background: #a00;
+	background-color: #a00;
+	border-color: #f00;
 }
 header#header h1 {
 	font-family: "DejaVu Monospace", monospace;
