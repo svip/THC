@@ -82,4 +82,6 @@ void webpage_youtubeembed(struct html_builder *builder,
                           const int width,
                           const int height);
 
+char *youtube_url(char *watchid);
+
 #endif

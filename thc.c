@@ -225,3 +225,9 @@ void webpage_youtubeembed(struct html_builder *builder,
   insert_text(builder, "");
   leave_tag(builder); /* iframe */
 }
+
+char *youtube_url(char *watchid) {
+  char *tmp = malloc(64);
+  sprintf(tmp, "http://youtube.com/watch?v=%s", watchid);
+  return tmp;
+}
