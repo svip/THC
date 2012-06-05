@@ -148,8 +148,9 @@ void insert_text(struct html_builder *builder,
 
 /* List of pages */
 #define WEBSITEPAGESELSPERROW 3
-static char* website_pages[2][WEBSITEPAGESELSPERROW] = {
+static char* website_pages[3][WEBSITEPAGESELSPERROW] = {
   { "Front", "Forsiden", "./" },
+  { "Videos", "Videoer", "./videoer.thc" },
   { "About", "Om", "./om.thc" }
 };
 
