@@ -236,18 +236,18 @@ void insert_text(struct html_builder *builder,
 /* The 'template' system for the webpage. */
 
 /* List of pages */
-#define WEBSITEPAGESELSPERROW 3
+#define WEBSITEPAGESELSPERROW 4
 static char* website_pages[4][WEBSITEPAGESELSPERROW] = {
-  { "Front", "Forsiden", "./" },
-  { "Videos", "Videoer", "./videoer.thc" },
-  { "About", "Om", "./om.thc" },
-  { "Dictionary", "Ordbog", "./ordbog.thc" }
+  { "Front", "index", "Forsiden", "./" },
+  { "Videos", "videoer", "Videoer", "./videoer.thc" },
+  { "About", "om", "Om", "./om.thc" },
+  { "Dictionary", "ordbog", "Ordbog", "./ordbog.thc" }
 };
 
 void webpage_start(struct html_builder *builder,
                    const char* page_name,
                    const char* title) {
-  char *newtitle = malloc(64);
+  char *newtitle = malloc(64), *tmp = malloc(32);
   int i;
   if ( title == NULL )
     newtitle = "topDatamat";
@@ -268,6 +268,19 @@ void webpage_start(struct html_builder *builder,
   else /* In case of a fatal site performance, make the entire page know */
     enter_tag(builder, "body", "id", "page-fatal", NULL);
   enter_tag(builder, "header", "id", "header", NULL);
+  enter_tag(builder, "div", "id", "viewsource", NULL);
+  for ( i = 0; i < (int)(sizeof(website_pages)/
+                         sizeof(char*)/
+                         WEBSITEPAGESELSPERROW); i++ ) {
+    if ( website_pages[i][0] == page_name ) {
+      sprintf(tmp, "./%s.c", website_pages[i][1]);
+      enter_tag(builder, "a", "href", tmp, NULL);
+      insert_text(builder, "Se koden nøgen");
+      leave_tag(builder); /* a */
+      break;
+    }
+  }
+      leave_tag(builder); /* div#viewsource */
   if ( page_name != NULL ) {
     enter_tag(builder, "div", "id", "languages", NULL);
     leave_tag(builder); /* div#languages */
@@ -293,8 +306,8 @@ void webpage_start(struct html_builder *builder,
       enter_tag(builder, "li", "class", "highlighted", NULL);
     else
       enter_tag(builder, "li", NULL);
-    enter_tag(builder, "a", "href", website_pages[i][2], NULL);
-    insert_text(builder, website_pages[i][1]);
+    enter_tag(builder, "a", "href", website_pages[i][3], NULL);
+    insert_text(builder, website_pages[i][2]);
     leave_tag(builder); /* a */
     leave_tag(builder); /* li */
   }
