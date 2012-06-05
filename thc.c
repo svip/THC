@@ -268,20 +268,20 @@ void webpage_start(struct html_builder *builder,
   else /* In case of a fatal site performance, make the entire page know */
     enter_tag(builder, "body", "id", "page-fatal", NULL);
   enter_tag(builder, "header", "id", "header", NULL);
-  enter_tag(builder, "div", "id", "viewsource", NULL);
-  for ( i = 0; i < (int)(sizeof(website_pages)/
-                         sizeof(char*)/
-                         WEBSITEPAGESELSPERROW); i++ ) {
-    if ( website_pages[i][0] == page_name ) {
-      sprintf(tmp, "./%s.c", website_pages[i][1]);
-      enter_tag(builder, "a", "href", tmp, NULL);
-      insert_text(builder, "Se koden nøgen");
-      leave_tag(builder); /* a */
-      break;
-    }
-  }
-      leave_tag(builder); /* div#viewsource */
   if ( page_name != NULL ) {
+    enter_tag(builder, "div", "id", "viewsource", NULL);
+    for ( i = 0; i < (int)(sizeof(website_pages)/
+                           sizeof(char*)/
+                           WEBSITEPAGESELSPERROW); i++ ) {
+      if ( website_pages[i][0] == page_name ) {
+        sprintf(tmp, "./%s.c", website_pages[i][1]);
+        enter_tag(builder, "a", "href", tmp, NULL);
+        insert_text(builder, "Se koden nøgen");
+        leave_tag(builder); /* a */
+        break;
+      }
+    }
+    leave_tag(builder); /* div#viewsource */
     enter_tag(builder, "div", "id", "languages", NULL);
     leave_tag(builder); /* div#languages */
     enter_tag(builder, "div", "id", "indbakken", NULL);
