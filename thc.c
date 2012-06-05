@@ -4,7 +4,8 @@
 #include <signal.h>
 
 void signal_handler(int signal, siginfo_t *info, void *context) {
-  char *error;
+  char *error, *tmp = malloc(64);
+  struct html_builder builder;
   UNUSED(info);
   UNUSED(context);
   switch (signal) {
@@ -17,7 +18,17 @@ void signal_handler(int signal, siginfo_t *info, void *context) {
   default:
     error = "Unhandled exception";
   }
-  printf("<html><h1>%s</h1></html>\r\n", error);
+  webpage_start(&builder, NULL, "Fejl");
+  enter_tag(&builder, "article", NULL);
+  enter_tag(&builder, "header", NULL);
+  enter_tag(&builder, "h1", NULL);
+  sprintf(tmp, "Fejl: %s", error);
+  insert_text(&builder, tmp);
+  leave_tag(&builder); /* h1 */
+  leave_tag(&builder); /* header */
+  leave_tag(&builder); /* article */
+  webpage_end(&builder);
+  print_tree(builder.top_node, 0);
   exit(1);
 }
 
@@ -199,18 +210,20 @@ void webpage_start(struct html_builder *builder,
   leave_tag(builder); /* head */
   enter_tag(builder, "body", NULL);
   enter_tag(builder, "header", "id", "header", NULL);
-  enter_tag(builder, "div", "id", "languages", NULL);
-  leave_tag(builder); /* div#languages */
-  enter_tag(builder, "div", "id", "indbakken", NULL);
-  insert_text(builder, "Send dine spørgsmål til ");
-  enter_tag(builder, "a", "href", "mailto:indbakken@topdatamat.dk", NULL);
-  insert_text(builder, "indbakken@topdatamat.dk");
-  leave_tag(builder); /* a */
-  insert_text(builder, ",");
-  enter_tag(builder, "br", NULL);
-  leave_tag(builder); /* br */
-  insert_text(builder, "så svarer Troels måske på dem.");
-  leave_tag(builder); /* div#indbakken */
+  if ( page_name != NULL ) {
+    enter_tag(builder, "div", "id", "languages", NULL);
+    leave_tag(builder); /* div#languages */
+    enter_tag(builder, "div", "id", "indbakken", NULL);
+    insert_text(builder, "Send dine spørgsmål til ");
+    enter_tag(builder, "a", "href", "mailto:indbakken@topdatamat.dk", NULL);
+    insert_text(builder, "indbakken@topdatamat.dk");
+    leave_tag(builder); /* a */
+    insert_text(builder, ",");
+    enter_tag(builder, "br", NULL);
+    leave_tag(builder); /* br */
+    insert_text(builder, "så svarer Troels måske på dem.");
+    leave_tag(builder); /* div#indbakken */
+  }
   enter_tag(builder, "h1", NULL);
   insert_text(builder, "topDatamat");
   leave_tag(builder); /* h1 */
