@@ -6,7 +6,7 @@ body {
 	padding: 0;
 }
 #page-fatal {
-	background: #e88;
+	background: #ecc;
 }
 
 a {
@@ -89,6 +89,20 @@ header#header h1 {
 
 #content {
 	padding: 5px 20px;
+}
+table.error-table {
+	width: 60%;
+	margin: 0 auto;
+	background: #a99;
+}
+table.error-table th {
+	background: #a22;
+	color: #fff;
+	padding: 2px 3px;
+}
+table.error-table td {
+	background: #fdd;
+	padding: 1px 4px;
 }
 
 fieldset {
