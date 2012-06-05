@@ -7,7 +7,7 @@ int pagemain(int argc, char** argv) {
   UNUSED(argc);
   UNUSED(argv);
   
-  webpage_start(&builder, NULL);
+  webpage_start(&builder, "Front", NULL);
   
   enter_tag(&builder, "article", NULL);
   enter_tag(&builder, "header", NULL);

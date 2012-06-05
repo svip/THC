@@ -144,9 +144,13 @@ void insert_text(struct html_builder *builder,
   }
 }
 
+/* List of pages */
+
+
 /* The 'template' system for the webpage. */
 
 void webpage_start(struct html_builder *builder,
+                   const char* page_name,
                    const char* title) {
   char *newtitle = malloc(64);
   if ( title == NULL )
