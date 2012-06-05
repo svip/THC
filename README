@@ -1,0 +1,11 @@
+This is the code for topdatamat.dk written in C.
+
+To compile and install:
+
+make && make install
+
+This will move the webpages into the www/ directory, and you can then set your
+webserver to point there.
+
+You need to either include the contents of www/.htaccess in your configuration
+file, so the files are executed or allow this directory to override.
