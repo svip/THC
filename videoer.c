@@ -4,11 +4,11 @@
 
 struct episode {
   int number;
-  union {
+  struct {
     char *watchid;
     char *title;
   } da;
-  union {
+  struct {
     char *watchid;
     char *title;
   } en;
@@ -46,16 +46,16 @@ struct season* create_season(struct season *current_season,
 
 void append_episode(struct season *current_season,
                     int number,
-                    char *da,
-                    char *en) {
+                    char *da_id, char *da_title,
+                    char *en_id, char *en_title) {
   struct episode *new_episode;
   new_episode = malloc(sizeof(struct episode));
   new_episode->number = number;
-  new_episode->da.watchid = (char*)da[0];
-  new_episode->da.title = da[1];
-  if ( en != NULL ) {
-    new_episode->en.watchid = en[0];
-    new_episode->en.title = en[1];
+  new_episode->da.watchid = da_id;
+  new_episode->da.title = da_title;
+  if ( en_id != NULL ) {
+    new_episode->en.watchid = en_id;
+    new_episode->en.title = en_title;
   } else {
     new_episode->en.watchid = NULL;
     new_episode->en.title = NULL;
@@ -78,8 +78,8 @@ int pagemain(int argc, char** argv) {
   
   first_season = create_season(NULL, 0);
   append_episode(first_season, 0,
-                 (char *){ "lgmA9z8Sb5E", NULL },
-                 (char *){ "0ohC89vJjnY", NULL });
+                 "lgmA9z8Sb5E", NULL,
+                 "0ohC89vJjnY", NULL);
   
   enter_tag(&builder, "article", NULL);
   enter_tag(&builder, "header", NULL);
