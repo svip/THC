@@ -21,6 +21,9 @@ header#header {
 	padding: 25px 40px 21px;
 	border-bottom: 1px solid #444;
 }
+#site-fatal header#header {
+	background: #a00;
+}
 header#header h1 {
 	font-family: "DejaVu Monospace", monospace;
 	font-style: italic;
