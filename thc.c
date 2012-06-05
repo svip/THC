@@ -144,15 +144,13 @@ void insert_text(struct html_builder *builder,
   }
 }
 
-/* List of pages */
-
-
 /* The 'template' system for the webpage. */
 
 void webpage_start(struct html_builder *builder,
                    const char* page_name,
                    const char* title) {
   char *newtitle = malloc(64);
+  int i;
   if ( title == NULL )
     newtitle = "topDatamat";
   else
@@ -185,14 +183,18 @@ void webpage_start(struct html_builder *builder,
   insert_text(builder, "topDatamat");
   leave_tag(builder); /* h1 */
   enter_tag(builder, "ul", "id", "menu", NULL);
-  /*
-    TODO: Generate the following from a list defined above.
-  */
-  enter_tag(builder, "li", "class", "highlighted", NULL);
-  enter_tag(builder, "a", "href", "./", NULL);
-  insert_text(builder, "Forsiden");
-  leave_tag(builder); /* a */
-  leave_tag(builder); /* li */
+  for ( i = 0; i < (int)(sizeof(website_pages)/
+                         sizeof(char*)/
+                         WEBSITEPAGESELSPERROW); i++ ) {
+    if ( website_pages[i][0] == page_name )
+      enter_tag(builder, "li", "class", "highlighted", NULL);
+    else
+      enter_tag(builder, "li", NULL);
+    enter_tag(builder, "a", "href", website_pages[i][2], NULL);
+    insert_text(builder, website_pages[i][1]);
+    leave_tag(builder); /* a */
+    leave_tag(builder); /* li */
+  }
   leave_tag(builder); /* ul#menu */
   leave_tag(builder); /* header */
   enter_tag(builder, "div", "id", "content", NULL);
