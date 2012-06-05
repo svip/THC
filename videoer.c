@@ -70,7 +70,7 @@ int pagemain(int argc, char** argv) {
   struct season *first_season;
   struct season *season;
   struct episode *episode;
-  char *tmp = malloc(64);
+  char *tmp;
   UNUSED(argc);
   UNUSED(argv);
   
@@ -92,6 +92,7 @@ int pagemain(int argc, char** argv) {
     enter_tag(&builder, "article", "class", "season", NULL);
     enter_tag(&builder, "header", NULL);
     enter_tag(&builder, "h1", NULL);
+    tmp = malloc(32);
     sprintf(tmp, "Blok %d", season->number);
     insert_text(&builder, tmp);
     leave_tag(&builder); /* h1 */
@@ -101,6 +102,7 @@ int pagemain(int argc, char** argv) {
       enter_tag(&builder, "article", "class", "episode", NULL);
       enter_tag(&builder, "header", NULL);
       enter_tag(&builder, "h1", NULL);
+      tmp = malloc(32);
       sprintf(tmp, "%dx%d", season->number, episode->number);
       insert_text(&builder, tmp);
       leave_tag(&builder); /* h1 */
