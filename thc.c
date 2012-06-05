@@ -146,6 +146,13 @@ void insert_text(struct html_builder *builder,
 
 /* The 'template' system for the webpage. */
 
+/* List of pages */
+#define WEBSITEPAGESELSPERROW 3
+static char* website_pages[2][WEBSITEPAGESELSPERROW] = {
+  { "Front", "Forsiden", "./" },
+  { "About", "Om", "./om.thc" }
+};
+
 void webpage_start(struct html_builder *builder,
                    const char* page_name,
                    const char* title) {
