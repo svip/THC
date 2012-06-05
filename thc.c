@@ -3,6 +3,19 @@
 #include <unistd.h>
 #include <signal.h>
 
+void insert_row(struct html_builder *builder,
+                char *row_name,
+                char *cell1) {
+  enter_tag(builder, "tr", NULL);
+  enter_tag(builder, "td", NULL);
+  insert_text(builder, row_name);
+  leave_tag(builder); /* td */
+  enter_tag(builder, "td", NULL);
+  insert_text(builder, (char*)cell1);
+  leave_tag(builder); /* td */
+  leave_tag(builder); /* tr */
+}
+
 void signal_handler(int signal, siginfo_t *info, void *context) {
   char *error, *tmp = malloc(64);
   struct html_builder builder;
@@ -26,6 +39,23 @@ void signal_handler(int signal, siginfo_t *info, void *context) {
   insert_text(&builder, tmp);
   leave_tag(&builder); /* h1 */
   leave_tag(&builder); /* header */
+  enter_tag(&builder, "table", "class", "error-table", NULL);
+  enter_tag(&builder, "thead", NULL);
+  enter_tag(&builder, "tr", NULL);
+  enter_tag(&builder, "th", NULL);
+  insert_text(&builder, "Variabel");
+  leave_tag(&builder); /* th */
+  enter_tag(&builder, "th", NULL);
+  insert_text(&builder, "Værdi");
+  leave_tag(&builder); /* th */
+  leave_tag(&builder); /* tr */
+  leave_tag(&builder); /* thead */
+  enter_tag(&builder, "tbody", NULL);
+  tmp = malloc(32);
+  sprintf(tmp, "%d", info->si_signo);
+  insert_row(&builder, "Signal number", tmp);
+  leave_tag(&builder); /* tbody */
+  leave_tag(&builder); /* table */
   leave_tag(&builder); /* article */
   webpage_end(&builder);
   print_tree(builder.top_node, 0);
@@ -208,7 +238,10 @@ void webpage_start(struct html_builder *builder,
   enter_tag(builder, "link", "href", "/media/styles.css", "rel", "stylesheet", NULL);
   leave_tag(builder); /* link */
   leave_tag(builder); /* head */
-  enter_tag(builder, "body", NULL);
+  if ( page_name != NULL )
+    enter_tag(builder, "body", NULL);
+  else /* In case of a fatal site performance, make the entire page know */
+    enter_tag(builder, "body", "class", "site-fatal", NULL);
   enter_tag(builder, "header", "id", "header", NULL);
   if ( page_name != NULL ) {
     enter_tag(builder, "div", "id", "languages", NULL);
