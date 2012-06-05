@@ -22,16 +22,6 @@ struct season {
   struct season *next_season;
 };
 
-/*
-char *videos[1][1][2][2] = {
-  { / blok 0 *
-    { * episode 0 *
-      { "lgmA9z8Sb5E", NULL },
-      { "0ohC89vJjnY", NULL }
-    }
-  }
-};*/
-
 struct season* create_season(struct season *current_season,
                              int number) {
   struct season *new_season;
@@ -65,6 +55,17 @@ void append_episode(struct season *current_season,
   current_season->last_episode = new_episode;
 }
 
+struct season* videos_init() {
+  struct season *first_season;
+  struct season *current_season;
+  first_season = create_season(NULL, 0);
+  current_season = first_season;
+  append_episode(current_season, 0,
+                 "lgmA9z8Sb5E", NULL,
+                 "0ohC89vJjnY", NULL);
+  return first_season;
+}
+
 int pagemain(int argc, char** argv) {
   struct html_builder builder;
   struct season *first_season;
@@ -76,10 +77,7 @@ int pagemain(int argc, char** argv) {
   
   webpage_start(&builder, "Videos", "Videoer");
   
-  first_season = create_season(NULL, 0);
-  append_episode(first_season, 0,
-                 "lgmA9z8Sb5E", NULL,
-                 "0ohC89vJjnY", NULL);
+  first_season = videos_init();
   
   enter_tag(&builder, "article", NULL);
   enter_tag(&builder, "header", NULL);
