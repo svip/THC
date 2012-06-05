@@ -77,4 +77,10 @@ void webpage_youtubeembed(struct html_builder *builder,
 
 char *youtube_url(char *watchid);
 
+#define TAGENTER(...) enter_tag(builder,__VA_ARGS__,NULL);
+
+#define TAG(args,body) TAGENTER args { body } leave_tag(builder);
+
+#define TEXT(text) insert_text(builder,text);
+
 #endif
