@@ -237,10 +237,11 @@ void insert_text(struct html_builder *builder,
 
 /* List of pages */
 #define WEBSITEPAGESELSPERROW 3
-static char* website_pages[3][WEBSITEPAGESELSPERROW] = {
+static char* website_pages[4][WEBSITEPAGESELSPERROW] = {
   { "Front", "Forsiden", "./" },
   { "Videos", "Videoer", "./videoer.thc" },
-  { "About", "Om", "./om.thc" }
+  { "About", "Om", "./om.thc" },
+  { "Dictionary", "Ordbog", "./ordbog.thc" }
 };
 
 void webpage_start(struct html_builder *builder,
