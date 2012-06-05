@@ -51,9 +51,18 @@ void signal_handler(int signal, siginfo_t *info, void *context) {
   leave_tag(&builder); /* tr */
   leave_tag(&builder); /* thead */
   enter_tag(&builder, "tbody", NULL);
-  tmp = malloc(32);
-  sprintf(tmp, "%d", info->si_signo);
+  tmp = malloc(32); sprintf(tmp, "%d", info->si_signo);
   insert_row(&builder, "Signal number", tmp);
+  tmp = malloc(32); sprintf(tmp, "%d", info->si_errno);
+  insert_row(&builder, "Error number", tmp);
+  tmp = malloc(32); sprintf(tmp, "%d", info->si_code);
+  insert_row(&builder, "Signal code", tmp);/*
+  tmp = malloc(32); sprintf(tmp, "%d", info->si_trapno);
+  insert_row(&builder, "Trap number", tmp);*/
+  tmp = malloc(32); sprintf(tmp, "%d", info->si_pid);
+  insert_row(&builder, "Process id", tmp);
+  tmp = malloc(32); sprintf(tmp, "%d", info->si_uid);
+  insert_row(&builder, "User id", tmp);
   leave_tag(&builder); /* tbody */
   leave_tag(&builder); /* table */
   leave_tag(&builder); /* article */
