@@ -1,2 +1,4 @@
 DirectoryIndex index.thc index.html index.php
 AddHandler cgi-script .thc
+RewriteEngine on
+RewriteRule ^(.+)\.html /$1.thc [L,QSA]
