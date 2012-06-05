@@ -241,7 +241,7 @@ void webpage_start(struct html_builder *builder,
   if ( page_name != NULL )
     enter_tag(builder, "body", NULL);
   else /* In case of a fatal site performance, make the entire page know */
-    enter_tag(builder, "body", "class", "site-fatal", NULL);
+    enter_tag(builder, "body", "id", "page-fatal", NULL);
   enter_tag(builder, "header", "id", "header", NULL);
   if ( page_name != NULL ) {
     enter_tag(builder, "div", "id", "languages", NULL);
