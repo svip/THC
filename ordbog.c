@@ -1,6 +1,7 @@
 #include "thc.h"
 
 #include <stdio.h>
+char* website_pagename = "ordbog";
 
 struct term {
   char *term;

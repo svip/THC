@@ -64,6 +64,8 @@ void insert_text(struct html_builder *builder,
 
 int pagemain(int argc, char** argv);
 
+extern char* website_pagename;
+
 void webpage_start(struct html_builder *builder,
                    const char* page_name,
                    const char* title);
