@@ -9,8 +9,6 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-char* website_pagename = "ordbog";
-
 struct term {
   char *term;
   char *abbr;

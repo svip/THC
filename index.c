@@ -1,7 +1,6 @@
 #include "thc.h"
 
 #include <stdio.h>
-char* website_pagename = "index";
 
 int pagemain(int argc, char** argv) {
   struct html_builder builderv;

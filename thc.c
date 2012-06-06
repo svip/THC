@@ -280,7 +280,7 @@ void webpage_start(struct html_builder *builder,
     enter_tag(builder, "body", "id", "page-fatal", NULL);
   enter_tag(builder, "header", "id", "header", NULL);
   enter_tag(builder, "div", "id", "viewsource", NULL);
-  sprintf(tmp, "./%s.c", website_pagename);
+  sprintf(tmp, "./%s", __FILE__);
   enter_tag(builder, "a", "href", tmp, NULL);
   insert_text(builder, "Se koden nøgen");
   leave_tag(builder); /* a */

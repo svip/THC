@@ -2,8 +2,6 @@
 
 #include <stdio.h>
 
-char* website_pagename = "videoer";
-
 struct episode {
   int number;
   struct {

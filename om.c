@@ -2,8 +2,6 @@
 
 #include <stdio.h>
 
-char *website_pagename = "om";
-
 int pagemain(int argc, char** argv) {
   struct html_builder builder;
   UNUSED(argc);
