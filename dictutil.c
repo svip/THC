@@ -49,7 +49,7 @@ int main(int argc, char** argv) {
       fprintf(stderr, "%s: %s: %s\n", progname, file, strerror(errno));
       exit(2);
     }
-    write_dictionary(file, NULL, dict);
+    write_dictionary(file, dict);
   } else if (strcmp(argv[2], "delete") == 0) {
     if (argc != 4) {
       fprintf(stderr, "Usage: %s %s delete <term>\n",
@@ -78,7 +78,7 @@ int main(int argc, char** argv) {
       fprintf(stderr, "%s: %s: %s\n", progname, file, strerror(errno));
       exit(2);
     }
-    write_dictionary(file, NULL, dict);
+    write_dictionary(file, dict);
   } else {
     fprintf(stderr, "Unknown command: %s\n", file);
     usage();

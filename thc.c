@@ -246,11 +246,10 @@ size_t term_size(struct term *term) {
     + strlen(term->translation)+1;
 }
 
-int write_dictionary(const char *path, void *start, struct dictionary *dict) {
+int write_dictionary(const char *path, struct dictionary *dict) {
   int fd = open(path, O_CREAT | O_RDWR | O_TRUNC,
                 S_IRUSR | S_IWUSR | S_IROTH | S_IRGRP);
   long str_offset = sizeof(*dict) + dict->num_terms * sizeof(struct term);
-  long offset = (long)start & ~(sysconf(_SC_PAGE_SIZE) - 1);
 
   if (-1 == fd) {
     return -1;
@@ -265,7 +264,7 @@ int write_dictionary(const char *path, void *start, struct dictionary *dict) {
   lseek(fd, dict_size - 1, SEEK_SET);
   write (fd, "", 1);
 
-  void *orig = mmap((void*)offset, dict_size,
+  void *orig = mmap(NULL, dict_size,
                     PROT_WRITE | PROT_READ, MAP_SHARED, fd, 0);
   char *loc = (char*)orig;
   struct dictionary *newdict = (struct dictionary*)loc;

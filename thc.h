@@ -102,7 +102,7 @@ struct dictionary {
   struct term *terms;
 };
 
-int write_dictionary(const char *path, void *start, struct dictionary *dict);
+int write_dictionary(const char *path, struct dictionary *dict);
 
 struct dictionary* read_dictionary(const char *path);
 
