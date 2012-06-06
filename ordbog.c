@@ -3,6 +3,12 @@
 #include <stdio.h>
 #include <string.h>
 
+#include <fcntl.h>
+#include <sys/mman.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
+
 char* website_pagename = "ordbog";
 
 struct term {
@@ -11,65 +17,81 @@ struct term {
   char *translation;
 };
 
-struct term dictionary[] = {
-  { "Hal", NULL, "Pull (changes)" },
-  { "Puf", NULL, "Push (changes)" },
-  { "Virkefelt", NULL, "Scope" },
-  { "Almen Seriel Bus", "asb", "Universal Serial Bus eller USB" },
-  { "Flet", NULL, "Merge" },
-  { "Tavledatamat", NULL, "Tablet" },
-  { "Gennemtvinge", NULL, "Force (changes)" },
-  { "Tekstbehandlingsprogram", NULL, "Text editor eller Editor" },
-  { "Afluser", NULL, "Debugger" },
-  { "Skiftenøgle", NULL, "Shift key" },
-  { "Elektronisk Databehandling (edb)", NULL, "Information Technology eller IT" },
-  { "Løsen", NULL, "Password" },
-  { "Spindelsidefortolker", NULL, "Web browser engine" },
-  { "Central beregneenhed", NULL, "Central Processing Unit eller CPU"},
-  { "Borddatamat", NULL, "Desktop computer" },
-  { "Fastpladelager", NULL, "Harddisk" },
-  { "Vognretur", NULL, "Carriage return" },
-  { "Oversætter", NULL, "Compiler"},
-  { "Maskinel", NULL, "Hardware" },
-  { "Skiftetast", NULL, "Shift key" },
-  { "Datafon", NULL, "Smartphone" },
-  { "Prikkode", NULL, "Quick Response Code eller QR Code" },
-  { "Skalprogram", NULL, "Shell script" },
-  { "Spindellæser", NULL, "Web browser" },
-  { "Skyen", NULL, "The cloud" },
-  { "Sammenflet(ning)", NULL, "Merge"},
-  { "E-brev", NULL, "E-mail"},
-  { "Råtekst", NULL, "Plain text"},
-  { "Hjemmedatamat", NULL, "Personal Computer eller PC" },
-  { "Arbejdslager", NULL, "Random Access Memory eller RAM" },
-  { "Central beregningsenhed", NULL, "Central Processing Unit eller CPU"},
-  { "Linjeskriver", NULL, "Printer" },
-  { "Kildetekst", NULL, "Source code" },
-  { "Datamatspil", NULL, "Video game eller Computer game"},
-  { "Flugttast", NULL, "Escape key" },
-  { "Systemskal", NULL, "Command shell eller Shell" },
-  { "Tekstredigeringsværktøj", NULL, "Text editor eller Editor" },
-  { "Datamat", NULL, "Computer"},
-  { "Kontaktskærm", NULL, "Touch screen" },
-  { "Sikkerhedskopi", NULL, "Backup" },
-  { "Elektropost", NULL, "E-mail" },
-  { "Lus", NULL, "Bug" },
-  { "Programmel", NULL, "Software" },
-  { "Topdatamat", NULL, "Supercomputer" },
-  { "Navnerum", NULL, "Namespace" },
-  { "Tastatur", NULL, "Keyboard" },
-  { "Klejntegn", NULL, "Minuscule eller Lowercase letter" },
-  { "Hjemmeside", NULL, "Web site" },
-  { "Greltegn", NULL, "Majuscule, Capital letter eller Uppercase letter" },
-  { "Udgave", NULL, "Version" },
-  { "Brandmur", NULL, "Firewall" },
-  { "Tving", NULL, "Force (changes)" },
-  { "Det |Verdensomspændende Spindel", NULL, "World Wide Web, WWW eller Web" },
-  { "Aflusning", NULL, "Debugging" },
-  { "Kodegrube", NULL, "Source repository" },
-  { "Mappedatamat", NULL, "Laptop" },
+size_t term_size(struct term *term) {
+  return strlen(term->term)+1
+    + (term->abbr ? strlen(term->abbr)+1 : 0)
+    + strlen(term->translation)+1;
+}
+
+struct dictionary {
+  struct dictionary *this;
+  size_t num_terms;
+  struct term *terms;
 };
-static const int dictionary_entries = sizeof(dictionary)/sizeof(struct term);
+
+int write_dictionary(const char *path, void *start, struct dictionary *dict) {
+  int fd = open(path, O_CREAT | O_RDWR | O_TRUNC,  S_IRUSR | S_IWUSR);
+  long str_offset = sizeof(*dict) + dict->num_terms * sizeof(struct term);
+  long offset = (long)start & ~(sysconf(_SC_PAGE_SIZE) - 1);
+
+  if (-1 == fd) {
+    return -1;
+  }
+
+  long dict_size = str_offset;
+
+  for (size_t i = 0; i < dict->num_terms; i++) {
+    dict_size += term_size(dict->terms+i)+1;
+  }
+
+  lseek(fd, dict_size - 1, SEEK_SET);
+  write (fd, "", 1);
+
+  void *orig = mmap((void*)offset, dict_size,
+                    PROT_WRITE | PROT_READ, MAP_SHARED, fd, 0);
+  char *loc = (char*)orig;
+  struct dictionary *newdict = (struct dictionary*)loc;
+  struct term *newterms = (struct term*)(loc+sizeof(*newdict));
+  newdict->this = newdict;
+  newdict->num_terms = dict->num_terms;
+  newdict->terms = newterms;
+  loc = (char*)newterms;
+
+  for (size_t i = 0; i < dict->num_terms; i++) {
+    struct term *term = dict->terms+i;
+    strcpy(loc+str_offset,term->term);
+    term->term = loc+str_offset;
+    str_offset += strlen(term->term)+1;
+    if (term->abbr) {
+      strcpy(loc+str_offset,term->abbr);
+      term->abbr = loc+str_offset;
+      str_offset += strlen(term->abbr)+1;
+    }
+    strcpy(loc+str_offset,term->translation);
+    term->translation = loc+str_offset;
+    str_offset += strlen(term->translation)+1;
+    newterms[i] = *term;
+  }
+
+  munmap(orig, dict_size);
+  close(fd);
+  return 0;
+}
+
+struct dictionary* read_dictionary(const char *path) {
+  struct dictionary dict;
+  int fd = open(path, O_RDWR);
+
+  if (fd == -1) {
+    return NULL;
+  }
+
+  read(fd, &dict, sizeof(dict));
+  dict.this = mmap((void*)dict.this, dict.num_terms,
+                   PROT_READ | PROT_WRITE, MAP_SHARED | MAP_FIXED, fd, 0);
+  close(fd);
+  return dict.this;
+}
 
 int cmp_term(const void *x, const void *y) {
   int cmp;
@@ -99,28 +121,35 @@ int pagemain(int argc, char** argv) {
   struct html_builder builderv;
   struct html_builder *builder = &builderv;
   char *term;
+  struct dictionary *dict;
   UNUSED(argc);
   UNUSED(argv);
 
-  qsort(dictionary, dictionary_entries, sizeof(struct term), cmp_term);
-
   webpage_start(builder, "Dictionary", "Ordbog");
+
+  dict = read_dictionary("ordbog.data");
 
   TAG(("article"),
       TAG(("header"), TAG(("h1"), TEXT("Ordbog")))
-      TAG(("dl", "class", "dictionary"),
-          for (int i = 0; i < dictionary_entries; i++) {
-            term = dictionary[i].term;
-            if (strchr(term, '|') != NULL)
-              term = remove_char(term, '|');
-            TAG(("dt"),
-                TEXT(term);
-                if (dictionary[i].abbr) {
-                  TEXT("(",dictionary[i].abbr,")");
-                })
-              TAG(("dd"), TEXT(dictionary[i].translation));
-          }));
 
+      if (dict == NULL) {
+        printf("Cannot read dictionary.");
+      } else {
+        qsort(dict->terms, dict->num_terms, sizeof(struct term), cmp_term);
+        TAG(("dl", "class", "dictionary"),
+            for (size_t i = 0; i < dict->num_terms; i++) {
+              TAG(("dt"),
+                  term = dict->terms[i].term;
+                  if (strchr(term, '|') != NULL) {
+                    term = remove_char(term, '|');
+                  }
+                  TEXT(dict->terms[i].term);
+                  if (dict->terms[i].abbr) {
+                    TEXT("(",dict->terms[i].abbr,")");
+                  })
+                TAG(("dd"), TEXT(dict->terms[i].translation));
+            });
+      });
   webpage_end(builder);
 
   print_tree(builder->top_node, 0);
