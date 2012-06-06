@@ -45,10 +45,32 @@ void pad(int depth) {
   }
 }
 
+void print_escaped(const char *s) {
+  for (; *s; s++) {
+    switch (*s) {
+    case '&':
+      fputs("&amp;", stdout);
+      break;
+    case '>':
+      fputs("&gt;", stdout);
+      break;
+    case '<':
+      fputs("&lt;", stdout);
+      break;
+    case '"':
+      fputs("&quot;", stdout);
+      break;
+    default:
+      putc(*s, stdout);
+    }
+  }
+}
+
 void print_tree(struct node *tree, int depth) {
   if (tree->type == TEXT) {
     pad(depth);
-    printf("%s\n", tree->data.text);
+    print_escaped(tree->data.text);
+    printf("\n");
   } else {
     struct list *list;
     pad(depth);
@@ -56,8 +78,9 @@ void print_tree(struct node *tree, int depth) {
     list = tree->data.tag.attrs;
     while (list) {
       printf(" ");
-      printf("%s=\"", ((struct attr*)list->data)->key);
-      printf("%s", ((struct attr*)list->data)->val);
+      print_escaped(((struct attr*)list->data)->key);
+      printf("=\"");
+      print_escaped(((struct attr*)list->data)->val);
       printf("\"");
       list = list->next;
     }
