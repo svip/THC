@@ -263,7 +263,7 @@ int write_dictionary(const char *path, struct dictionary *dict) {
   }
 
   lseek(fd, dict_size - 1, SEEK_SET);
-  write (fd, "", 1);
+  (void)write(fd, "", 1);
 
   void *orig = mmap(NULL, dict_size,
                     PROT_WRITE | PROT_READ, MAP_SHARED, fd, 0);
@@ -301,7 +301,7 @@ struct dictionary* read_dictionary(const char *path) {
     return NULL;
   }
 
-  read(fd, &dict, sizeof(dict));
+  (void)read(fd, &dict, sizeof(dict));
   dict.this = mmap((void*)dict.this, dict.num_terms,
                    PROT_READ | PROT_WRITE, MAP_SHARED | MAP_FIXED, fd, 0);
   close(fd);
