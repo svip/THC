@@ -23,13 +23,13 @@ void signal_handler(int signal, siginfo_t *info, void *context) {
   UNUSED(context);
   switch (signal) {
   case SIGSEGV:
-    error = "Segmentation fault";
+    error = "Lagersegmentfejl";
     break;
   case SIGBUS:
-    error = "Bus error";
+    error = "Busfejl";
     break;
   default:
-    error = "Unhandled exception";
+    error = "Løbsk undtagelse";
   }
   webpage_start(builder, NULL, "Fejl");
   TAG(("article"),
