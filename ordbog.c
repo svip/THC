@@ -30,7 +30,8 @@ struct dictionary {
 };
 
 int write_dictionary(const char *path, void *start, struct dictionary *dict) {
-  int fd = open(path, O_CREAT | O_RDWR | O_TRUNC,  S_IRUSR | S_IWUSR);
+  int fd = open(path, O_CREAT | O_RDWR | O_TRUNC,
+                S_IRUSR | S_IWUSR | S_IROTH | S_IRGRP);
   long str_offset = sizeof(*dict) + dict->num_terms * sizeof(struct term);
   long offset = (long)start & ~(sysconf(_SC_PAGE_SIZE) - 1);
 
