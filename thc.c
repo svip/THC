@@ -164,7 +164,8 @@ static char* website_pages[4][WEBSITEPAGESELSPERROW] = {
   { "Front", "Forsiden", "./" },
   { "Videos", "Videoer", "./videoer.thc" },
   { "About", "Om", "./om.thc" },
-  { "Dictionary", "Ordbog", "./ordbog.thc" }
+  { "Dictionary", "Ordbog", "./ordbog.thc" },
+  { "FanFiction", "Fanfiction", "./fanfiction.thc" }
 };
 
 void webpage_start(struct html_builder *builder,
