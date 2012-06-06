@@ -8,7 +8,7 @@ int pagemain(int argc, char** argv) {
   UNUSED(argc);
   UNUSED(argv);
   
-  printf("content-type: text/plain\r\n\r\n");
+  printf("Content-Type: text/plain\r\n\r\n");
   system("env");
   return 0;
   webpage_start(builder, "FanFiction", "Fanfiction");
