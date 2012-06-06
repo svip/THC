@@ -22,6 +22,13 @@ int pagemain(int argc, char** argv) {
         TAG(("p"), TEXT("Er vi vilde med dit fanfiction, så kan det være vi putter det på hjemmeside, så alle kan læse det."));
         TAG(("label", "for", "fanfiction-title"), TEXT("Titel (påkrævet):"));
         TAG(("input", "type", "text", "id", "fanfiction-title", "name", "fanfiction-title"), );
+        TAG(("label", "for", "fanfiction-author"), TEXT("Forfatter (påkrævet):"));
+        TAG(("input", "type", "text", "id", "fanfiction-author", "name", "fanfiction-author"), );
+        TAG(("label", "for", "fanfiction-email"), TEXT("Elektropost:"));
+        TAG(("input", "type", "text", "id", "fanfiction-email", "name", "fanfiction-email"), );
+        TAG(("label", "for", "fanfiction-text"), TEXT("Værket (påkrævet):"));
+        TAG(("textarea", "cols", "52", "rows", "10", "id", "fanfiction-text", "name", "fanfiction-text"), );
+        TAG(("input", "type", "submit", "name", "fanfiction-submit"), "value", "Indsend" );
         )
       )
     )
@@ -30,8 +37,6 @@ int pagemain(int argc, char** argv) {
   webpage_end(builder);
 
   print_tree(builder->top_node, 0);
-
-  /*  test();*/
 
   return 0;
 }
