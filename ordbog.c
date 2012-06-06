@@ -94,25 +94,22 @@ struct dictionary* read_dictionary(const char *path) {
 }
 
 int cmp_term(const void *x, const void *y) {
-  int cmp;
-  char *termx, *termy;
-  termx = ((const struct term*)x)->term;
+   char *termx = ((const struct term*)x)->term;
+  char *termy = ((const struct term*)y)->term;
   if (strchr(termx, '|') != NULL) {
-    termx = strchr(termx, '|');
+    termx = strchr(termx, '|')+1;
   }
-  termy = ((const struct term*)y)->term;
   if (strchr(termy, '|') != NULL) {
-    termy = strchr(termy, '|');
+    termy = strchr(termy, '|')+1;
   }
-  cmp = strcmp(termx, termy);
-  return cmp;
+  return strcmp(termx, termy);
 }
 
-char *remove_char(char *str, char chr) {
+char *blank_char(char *str, char chr) {
   char *p;
   p = str;
   while ( (p = strchr(p, chr)) != NULL ) {
-    memmove(p, p+1, strlen(p));
+    *p = ' ';
   }
   return p;
 }
@@ -141,7 +138,7 @@ int pagemain(int argc, char** argv) {
               TAG(("dt"),
                   term = dict->terms[i].term;
                   if (strchr(term, '|') != NULL) {
-                    term = remove_char(term, '|');
+                    term = blank_char(term, '|');
                   }
                   TEXT(dict->terms[i].term);
                   if (dict->terms[i].abbr) {
