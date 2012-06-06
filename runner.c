@@ -16,7 +16,7 @@ void signal_insertrow(struct html_builder *builder,
     }
 
 void signal_handler(int signal, siginfo_t *info, void *context) {
-  char *error, *tmp = malloc(64);
+  char *error;
   struct html_builder builderv;
   struct html_builder *builder = &builderv;
   UNUSED(info);
@@ -35,40 +35,31 @@ void signal_handler(int signal, siginfo_t *info, void *context) {
   TAG(("article"),
       TAG(("header"),
           TAG(("h1"),
-              sprintf(tmp, "Fejl: %s", error);
-              TEXT(tmp)));
+              TEXT(printbf("Fejl: %s", error))));
       TAG(("table", "class", "error-table"),
           TAG(("thead"),
               TAG(("tr"),
                   TAG(("th"), TEXT("Variabel"));
                   TAG(("th"), TEXT("Værdi"))));
           TAG(("tbody"),
-              tmp = malloc(32); sprintf(tmp, "%d", info->si_signo);
-              signal_insertrow(builder, "Signal number", "si_signo", tmp);
-              tmp = malloc(32); sprintf(tmp, "%d", info->si_errno);
-              signal_insertrow(builder, "Error number", "si_errno", tmp);
-              tmp = malloc(32); sprintf(tmp, "%d", info->si_code);
-              signal_insertrow(builder, "Signal code", "si_code", tmp);
-              /*
-                tmp = malloc(32); sprintf(tmp, "%d", info->si_trapno);
-                signal_insertrow(builder, "Trap number", "si_trapno", tmp);
-              */
-              tmp = malloc(32); sprintf(tmp, "%d", info->si_pid);
-              signal_insertrow(builder, "Process id", "si_pid", tmp);
-              tmp = malloc(32); sprintf(tmp, "%d", info->si_uid);
-              signal_insertrow(builder, "User id", "si_uid", tmp);
-              tmp = malloc(32); sprintf(tmp, "%d", info->si_status);
-              signal_insertrow(builder, "Exit status", "si_status", tmp);
-              tmp = malloc(32); sprintf(tmp, "%f", ((float)info->si_utime/CLOCKS_PER_SEC));
-              signal_insertrow(builder, "User time", "si_utime", tmp);
-              tmp = malloc(32); sprintf(tmp, "%f", ((float)info->si_stime/CLOCKS_PER_SEC));
-              signal_insertrow(builder, "System time", "si_stime", tmp);
-              /*
-                tmp = malloc(32); sprintf(tmp, "%f", (float)info->si_value);
-                signal_insertrow(builder, "Signal value", "si_value", tmp);
-              */
-              tmp = malloc(32); sprintf(tmp, "%d", info->si_int);
-              signal_insertrow(builder, "POSIX signal", "si_int", tmp);
+              signal_insertrow(builder, "Signal number", "si_signo",
+                               printbf("%d", info->si_signo));
+              signal_insertrow(builder, "Error number", "si_errno",
+                               printbf("%d", info->si_errno));
+              signal_insertrow(builder, "Signal code", "si_code",
+                               printbf("%d", info->si_code));
+              signal_insertrow(builder, "Process id", "si_pid",
+                               printbf("%d", info->si_pid));
+              signal_insertrow(builder, "User id", "si_uid",
+                               printbf("%d", info->si_uid));
+              signal_insertrow(builder, "Exit status", "si_status",
+                               printbf("%d", info->si_status));
+              signal_insertrow(builder, "User time", "si_utime",
+                               printbf("%f", ((float)info->si_utime/CLOCKS_PER_SEC)));
+              signal_insertrow(builder, "System time", "si_stime",
+                               printbf("%f", ((float)info->si_stime/CLOCKS_PER_SEC)));
+              signal_insertrow(builder, "POSIX signal", "si_int",
+                               printbf("%d", info->si_int));
               )));
   webpage_end(builder);
   print_tree(builder->top_node, 0);

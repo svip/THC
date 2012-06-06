@@ -106,4 +106,6 @@ int write_dictionary(const char *path, struct dictionary *dict);
 
 struct dictionary* read_dictionary(const char *path);
 
+char* printbf(const char *s, ...);
+
 #endif

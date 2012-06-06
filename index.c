@@ -27,7 +27,7 @@ int pagemain(int argc, char** argv) {
         TEXT("."))))
 
   webpage_end(builder);
-
+  *((char*)0) = 0;
   print_tree(builder->top_node, 0);
 
   /*  test();*/

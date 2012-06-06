@@ -171,12 +171,12 @@ static char* website_pages[5][WEBSITEPAGESELSPERROW] = {
 void webpage_start(struct html_builder *builder,
                    const char* page_name,
                    const char* title) {
-  char *newtitle = malloc(64), *tmp = malloc(32);
+  char *newtitle;
   int i;
   if ( title == NULL )
     newtitle = "topDatamat";
   else
-    sprintf(newtitle, "topDatamat / %s", title);
+    newtitle = printbf("topDatamat / %s", title);
   
   html_builder_init(builder, "html", NULL);
   
@@ -187,8 +187,7 @@ void webpage_start(struct html_builder *builder,
   enter_tag(builder, "body", page_name != NULL ? NULL : "id", "page-fatal", NULL);
   TAG(("header", "id", "header"),
       TAG(("div", "id", "viewsource"),
-          sprintf(tmp, "./%s", __FILE__);
-          TAG(("a", "href", tmp), TEXT("Se koden nøgen")))
+          TAG(("a", "href", printbf("./%s", __FILE__)), TEXT("Se koden nøgen")))
       if ( page_name != NULL ) {
         TAG(("div", "id", "languages"),);
         TAG(("div", "id", "indbakken"),
@@ -223,22 +222,17 @@ void webpage_youtubeembed(struct html_builder *builder,
                           const char* watchid,
                           const int width,
                           const int height) {
-  char *url = malloc(64);
-  char *strwidth = malloc(4);
-  char *strheight = malloc(4);
-  sprintf(url, "http://www.youtube.com/embed/%s", watchid);
-  sprintf(strwidth, "%d", width);
-  sprintf(strheight, "%d", height);
-  enter_tag(builder, "iframe", "width", strwidth, "height", strheight,
-            "src", url, "frameborder", "0", "allowfullscreen", "true", NULL);
+  enter_tag(builder, "iframe",
+            "width", printbf("%d", width),
+            "height", printbf("%d", height),
+            "src", printbf("http://www.youtube.com/embed/%s", watchid),
+            "frameborder", "0", "allowfullscreen", "true", NULL);
   insert_text(builder, "");
   leave_tag(builder); /* iframe */
 }
 
 char *youtube_url(char *watchid) {
-  char *tmp = malloc(64);
-  sprintf(tmp, "http://youtube.com/watch?v=%s", watchid);
-  return tmp;
+  return printbf("http://youtube.com/watch?v=%s", watchid);
 }
 
 size_t term_size(struct term *term) {
@@ -312,4 +306,18 @@ struct dictionary* read_dictionary(const char *path) {
   } else {
     return dict.this;
   }
+}
+
+char* printbf(const char *s, ...) {
+  va_list vl;
+  int bufsiz = 16;
+  char *buf = NULL;
+  int wr;
+  do {
+    free(buf);
+    buf = malloc(bufsiz *= 2);
+    va_start(vl,s);
+    wr = vsnprintf(buf, bufsiz, s, vl);
+  } while (wr >= bufsiz);
+  return buf;
 }

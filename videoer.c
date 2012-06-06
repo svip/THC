@@ -72,7 +72,6 @@ int pagemain(int argc, char** argv) {
   struct season *first_season;
   struct season *season;
   struct episode *episode;
-  char *tmp;
   UNUSED(argc);
   UNUSED(argv);
   
@@ -86,20 +85,12 @@ int pagemain(int argc, char** argv) {
       while (season) {
         TAG(("article", "class", "season"),
             TAG(("header"),
-                TAG(("h1"),
-                    tmp = malloc(32);
-                    sprintf(tmp, "Blok %d", season->number);
-                    TEXT(tmp);
-                    ))
+                TAG(("h1"), TEXT(printbf("Blok %d", season->number))));
             episode = season->first_episode;
             while (episode) {
               TAG(("article", "class", "episode"),
                   TAG(("header"),
-                      TAG(("h1"),
-                          tmp = malloc(32);
-                          sprintf(tmp, "%dx%d", season->number, episode->number);
-                          TEXT(tmp);
-                          ))
+                      TAG(("h1"), TEXT(printbf("%dx%d", season->number, episode->number))));
                   TAG(("article", "class", "episode-da"),
                       TAG(("header"), TAG(("h1"), TEXT("Med danske undertekster")));
                       webpage_youtubeembed(builder, episode->da.watchid, 480, 274);
