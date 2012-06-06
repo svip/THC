@@ -64,7 +64,7 @@ struct term dictionary[] = {
   { "Udgave", NULL, "Version" },
   { "Brandmur", NULL, "Firewall" },
   { "Tving", NULL, "Force (changes)" },
-  { "Verdensomspændende Spindel,Det", NULL, "World Wide Web, WWW eller Web" },
+  { "Det |Verdensomspændende Spindel", NULL, "World Wide Web, WWW eller Web" },
   { "Aflusning", NULL, "Debugging" },
   { "Kodegrube", NULL, "Source repository" },
   { "Mappedatamat", NULL, "Laptop" },
@@ -72,31 +72,33 @@ struct term dictionary[] = {
 static const int dictionary_entries = sizeof(dictionary)/sizeof(struct term);
 
 int cmp_term(const void *x, const void *y) {
-  char *suffix = malloc(6);
-  char *full = malloc(64);
-  char *term = malloc(64);
-  term = ((const struct term*)x)->term;
-  if (strchr(term, ',') != NULL) {
-    strncpy(suffix, strchr(term, ','), strlen(term));
-    strncpy(full, term, strlen(term)-strlen(suffix));
-    sprintf(((const struct term*)x)->term, "%s %s", full, suffix);
+  int cmp;
+  char *termx, *termy;
+  termx = ((const struct term*)x)->term;
+  if (strchr(termx, '|') != NULL) {
+    termx = strchr(termx, '|');
   }
-  term = malloc(64);
-  term = ((const struct term*)y)->term;
-  if (strchr(term, ',') != NULL) {
-    strncpy(suffix, strchr(term, ','), strlen(term));
-    strncpy(full, term, strlen(term)-strlen(suffix));
-    sprintf(((const struct term*)y)->term, "%s %s", full, suffix);
+  termy = ((const struct term*)y)->term;
+  if (strchr(termy, '|') != NULL) {
+    termy = strchr(termy, '|');
   }
-  free(term);
-  free(full);
-  free(suffix);
-  return strcmp(((const struct term*)x)->term, ((const struct term*)y)->term);
+  cmp = strcmp(termx, termy);
+  return cmp;
+}
+
+char *remove_char(char *str, char chr) {
+  char *p;
+  p = str;
+  while ( (p = strchr(p, chr)) != NULL ) {
+    memmove(p, p+1, strlen(p));
+  }
+  return p;
 }
 
 int pagemain(int argc, char** argv) {
   struct html_builder builderv;
   struct html_builder *builder = &builderv;
+  char *term;
   UNUSED(argc);
   UNUSED(argv);
 
@@ -108,8 +110,11 @@ int pagemain(int argc, char** argv) {
       TAG(("header"), TAG(("h1"), TEXT("Ordbog")))
       TAG(("dl", "class", "dictionary"),
           for (int i = 0; i < dictionary_entries; i++) {
+            term = dictionary[i].term;
+            if (strchr(term, '|') != NULL)
+              term = remove_char(term, '|');
             TAG(("dt"),
-                TEXT(dictionary[i].term);
+                TEXT(term);
                 if (dictionary[i].abbr) {
                   TEXT("(",dictionary[i].abbr,")");
                 })
