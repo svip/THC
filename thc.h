@@ -88,4 +88,22 @@ char *youtube_url(char *watchid);
 
 #define TEXT(...) insert_texts(builder,__VA_ARGS__,NULL);
 
+struct term {
+  char *term;
+  char *abbr;
+  char *translation;
+};
+
+size_t term_size(struct term *term);
+
+struct dictionary {
+  struct dictionary *this;
+  size_t num_terms;
+  struct term *terms;
+};
+
+int write_dictionary(const char *path, void *start, struct dictionary *dict);
+
+struct dictionary* read_dictionary(const char *path);
+
 #endif
