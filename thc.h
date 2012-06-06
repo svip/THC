@@ -62,6 +62,9 @@ void append_tag(struct html_builder *builder,
 void insert_text(struct html_builder *builder,
                  const char* text);
 
+void insert_texts(struct html_builder *builder,
+                  ...);
+
 int pagemain(int argc, char** argv);
 
 extern char* website_pagename;
@@ -83,6 +86,6 @@ char *youtube_url(char *watchid);
 
 #define TAG(args,body) TAGENTER args { body } leave_tag(builder);
 
-#define TEXT(text) insert_text(builder,text);
+#define TEXT(...) insert_texts(builder,__VA_ARGS__,NULL);
 
 #endif

@@ -233,6 +233,17 @@ void insert_text(struct html_builder *builder,
   }
 }
 
+void insert_texts(struct html_builder *builder,
+                  ...) {
+  va_list vl;
+  va_start(vl,builder);
+  char *text;
+  while ((text = va_arg(vl,char*))) {
+    insert_text(builder, text);
+  }
+  va_end(vl);
+}
+
 /* The 'template' system for the webpage. */
 
 /* List of pages */
