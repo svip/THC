@@ -8,8 +8,6 @@ int pagemain(int argc, char** argv) {
   UNUSED(argc);
   UNUSED(argv);
   
-  system("env");
-  return 0;
   webpage_start(builder, "FanFiction", "Fanfiction");
 
   TAG(("article"),
