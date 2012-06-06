@@ -5,25 +5,20 @@
 #include <time.h>
 
 void signal_insertrow(struct html_builder *builder,
-                char *signal_name,
-                char *signal_code,
-                char *value) {
-  enter_tag(builder, "tr", NULL);
-  enter_tag(builder, "td", NULL);
-  insert_text(builder, signal_name);
-  enter_tag(builder, "tt", NULL);
-  insert_text(builder, signal_code);
-  leave_tag(builder); /* tt */
-  leave_tag(builder); /* td */
-  enter_tag(builder, "td", NULL);
-  insert_text(builder, value);
-  leave_tag(builder); /* td */
-  leave_tag(builder); /* tr */
-}
+                      char *signal_name,
+                      char *signal_code,
+                      char *value) {
+  TAG(("tr"),
+      TAG(("td"),
+          TEXT(signal_name);
+          TAG(("tt"), TEXT(signal_code)))
+      TAG(("td"), TEXT(value)))
+    }
 
 void signal_handler(int signal, siginfo_t *info, void *context) {
   char *error, *tmp = malloc(64);
-  struct html_builder builder;
+  struct html_builder builderv;
+  struct html_builder *builder = &builderv;
   UNUSED(info);
   UNUSED(context);
   switch (signal) {
@@ -36,53 +31,47 @@ void signal_handler(int signal, siginfo_t *info, void *context) {
   default:
     error = "Unhandled exception";
   }
-  webpage_start(&builder, NULL, "Fejl");
-  enter_tag(&builder, "article", NULL);
-  enter_tag(&builder, "header", NULL);
-  enter_tag(&builder, "h1", NULL);
-  sprintf(tmp, "Fejl: %s", error);
-  insert_text(&builder, tmp);
-  leave_tag(&builder); /* h1 */
-  leave_tag(&builder); /* header */
-  enter_tag(&builder, "table", "class", "error-table", NULL);
-  enter_tag(&builder, "thead", NULL);
-  enter_tag(&builder, "tr", NULL);
-  enter_tag(&builder, "th", NULL);
-  insert_text(&builder, "Variabel");
-  leave_tag(&builder); /* th */
-  enter_tag(&builder, "th", NULL);
-  insert_text(&builder, "Værdi");
-  leave_tag(&builder); /* th */
-  leave_tag(&builder); /* tr */
-  leave_tag(&builder); /* thead */
-  enter_tag(&builder, "tbody", NULL);
-  tmp = malloc(32); sprintf(tmp, "%d", info->si_signo);
-  signal_insertrow(&builder, "Signal number", "si_signo", tmp);
-  tmp = malloc(32); sprintf(tmp, "%d", info->si_errno);
-  signal_insertrow(&builder, "Error number", "si_errno", tmp);
-  tmp = malloc(32); sprintf(tmp, "%d", info->si_code);
-  signal_insertrow(&builder, "Signal code", "si_code", tmp);/*
-  tmp = malloc(32); sprintf(tmp, "%d", info->si_trapno);
-  signal_insertrow(&builder, "Trap number", "si_trapno", tmp);*/
-  tmp = malloc(32); sprintf(tmp, "%d", info->si_pid);
-  signal_insertrow(&builder, "Process id", "si_pid", tmp);
-  tmp = malloc(32); sprintf(tmp, "%d", info->si_uid);
-  signal_insertrow(&builder, "User id", "si_uid", tmp);
-  tmp = malloc(32); sprintf(tmp, "%d", info->si_status);
-  signal_insertrow(&builder, "Exit status", "si_status", tmp);
-  tmp = malloc(32); sprintf(tmp, "%f", ((float)info->si_utime/CLOCKS_PER_SEC));
-  signal_insertrow(&builder, "User time", "si_utime", tmp);
-  tmp = malloc(32); sprintf(tmp, "%f", ((float)info->si_stime/CLOCKS_PER_SEC));
-  signal_insertrow(&builder, "System time", "si_stime", tmp);
-  /*tmp = malloc(32); sprintf(tmp, "%f", (float)info->si_value);
-  signal_insertrow(&builder, "Signal value", "si_value", tmp);*/
-  tmp = malloc(32); sprintf(tmp, "%d", info->si_int);
-  signal_insertrow(&builder, "POSIX signal", "si_int", tmp);
-  leave_tag(&builder); /* tbody */
-  leave_tag(&builder); /* table */
-  leave_tag(&builder); /* article */
-  webpage_end(&builder);
-  print_tree(builder.top_node, 0);
+  webpage_start(builder, NULL, "Fejl");
+  TAG(("article"),
+      TAG(("header"),
+          TAG(("h1"),
+              sprintf(tmp, "Fejl: %s", error);
+              TEXT(tmp)));
+      TAG(("table", "class" "error-table"),
+          TAG(("thead"),
+              TAG(("tr"),
+                  TAG(("th"), TEXT("Variabel"));
+                  TAG(("th"), TEXT("Værdi"))));
+          TAG(("tbody"),
+              tmp = malloc(32); sprintf(tmp, "%d", info->si_signo);
+              signal_insertrow(builder, "Signal number", "si_signo", tmp);
+              tmp = malloc(32); sprintf(tmp, "%d", info->si_errno);
+              signal_insertrow(builder, "Error number", "si_errno", tmp);
+              tmp = malloc(32); sprintf(tmp, "%d", info->si_code);
+              signal_insertrow(builder, "Signal code", "si_code", tmp);
+              /*
+                tmp = malloc(32); sprintf(tmp, "%d", info->si_trapno);
+                signal_insertrow(builder, "Trap number", "si_trapno", tmp);
+              */
+              tmp = malloc(32); sprintf(tmp, "%d", info->si_pid);
+              signal_insertrow(builder, "Process id", "si_pid", tmp);
+              tmp = malloc(32); sprintf(tmp, "%d", info->si_uid);
+              signal_insertrow(builder, "User id", "si_uid", tmp);
+              tmp = malloc(32); sprintf(tmp, "%d", info->si_status);
+              signal_insertrow(builder, "Exit status", "si_status", tmp);
+              tmp = malloc(32); sprintf(tmp, "%f", ((float)info->si_utime/CLOCKS_PER_SEC));
+              signal_insertrow(builder, "User time", "si_utime", tmp);
+              tmp = malloc(32); sprintf(tmp, "%f", ((float)info->si_stime/CLOCKS_PER_SEC));
+              signal_insertrow(builder, "System time", "si_stime", tmp);
+              /*
+                tmp = malloc(32); sprintf(tmp, "%f", (float)info->si_value);
+                signal_insertrow(builder, "Signal value", "si_value", tmp);
+              */
+              tmp = malloc(32); sprintf(tmp, "%d", info->si_int);
+              signal_insertrow(builder, "POSIX signal", "si_int", tmp);
+              )));
+  webpage_end(builder);
+  print_tree(builder->top_node, 0);
   exit(1);
 }
 
@@ -267,66 +256,42 @@ void webpage_start(struct html_builder *builder,
   
   html_builder_init(builder, "html", NULL);
   
-  enter_tag(builder, "head", NULL);
-  enter_tag(builder, "title", NULL);
-  insert_text(builder, newtitle);
-  leave_tag(builder); /* title */
-  enter_tag(builder, "link", "href", "/media/styles.css", "rel", "stylesheet", NULL);
-  leave_tag(builder); /* link */
-  leave_tag(builder); /* head */
-  if ( page_name != NULL )
-    enter_tag(builder, "body", NULL);
-  else /* In case of a fatal site performance, make the entire page know */
-    enter_tag(builder, "body", "id", "page-fatal", NULL);
-  enter_tag(builder, "header", "id", "header", NULL);
-  enter_tag(builder, "div", "id", "viewsource", NULL);
-  sprintf(tmp, "./%s", __FILE__);
-  enter_tag(builder, "a", "href", tmp, NULL);
-  insert_text(builder, "Se koden nøgen");
-  leave_tag(builder); /* a */
-  leave_tag(builder); /* div#viewsource */
-  if ( page_name != NULL ) {
-    enter_tag(builder, "div", "id", "languages", NULL);
-    leave_tag(builder); /* div#languages */
-    enter_tag(builder, "div", "id", "indbakken", NULL);
-    insert_text(builder, "Send dine spørgsmål til ");
-    enter_tag(builder, "a", "href", "mailto:indbakken@topdatamat.dk", NULL);
-    insert_text(builder, "indbakken@topdatamat.dk");
-    leave_tag(builder); /* a */
-    insert_text(builder, ",");
-    enter_tag(builder, "br", NULL);
-    leave_tag(builder); /* br */
-    insert_text(builder, "så svarer Troels måske på dem.");
-    leave_tag(builder); /* div#indbakken */
-  }
-  enter_tag(builder, "h1", NULL);
-  insert_text(builder, "topDatamat");
-  leave_tag(builder); /* h1 */
-  enter_tag(builder, "ul", "id", "menu", NULL);
-  for ( i = 0; i < (int)(sizeof(website_pages)/
-                         sizeof(char*)/
-                         WEBSITEPAGESELSPERROW); i++ ) {
-    if ( website_pages[i][0] == page_name )
-      enter_tag(builder, "li", "class", "highlighted", NULL);
-    else
-      enter_tag(builder, "li", NULL);
-    enter_tag(builder, "a", "href", website_pages[i][2], NULL);
-    insert_text(builder, website_pages[i][1]);
-    leave_tag(builder); /* a */
-    leave_tag(builder); /* li */
-  }
-  leave_tag(builder); /* ul#menu */
-  leave_tag(builder); /* header */
-  enter_tag(builder, "div", "id", "content", NULL);
+  TAG(("head"),
+      TAG(("title"), TEXT(newtitle))
+      TAG(("link", "href", "/media/styles.css", "rel", "stylesheet"),));
+  /* In case of a fatal site performance, make the entire page know */
+  enter_tag(builder, "body", page_name != NULL ? NULL : "id", "page-fatal", NULL);
+  TAG(("header", "id", "header"),
+      TAG(("div", "id", "viewsource"),
+          sprintf(tmp, "./%s", __FILE__);
+          TAG(("a", "href", tmp), TEXT("Se koden nøgen")))
+      if ( page_name != NULL ) {
+        TAG(("div", "id", "languages"),);
+        TAG(("div", "id", "indbakken"),
+            TEXT("Send dine spørgsmål til ");
+            TAG(("a", "href", "mailto:indbakken@topdatamat.dk"),
+                TEXT("indbakken@topdatamat.dk"))
+            TEXT(",");
+            TAG(("br"),);
+            TEXT("så svarer Troels måske på dem.");
+            )
+          }
+      TAG(("h1"), TEXT("topDatamat"))
+      TAG(("ul", "id", "menu"),
+          for ( i = 0; i < (int)(sizeof(website_pages)/
+                                 sizeof(char*)/
+                                 WEBSITEPAGESELSPERROW); i++ ) {
+            TAG(("li", website_pages[i][0] != page_name ? NULL : "class", "highlighted"),
+                TAG(("a", "href", website_pages[i][2]),
+                    TEXT(website_pages[i][1])))
+              }))
+    enter_tag(builder, "div", "id", "content", NULL);
 }
 
 void webpage_end(struct html_builder *builder) {
   leave_tag(builder); /* div#content */
-  enter_tag(builder, "footer", "id", "footer", NULL);
-  enter_tag(builder, "p", NULL);
-  insert_text(builder, "Denne hjemmeside er skrevet i C.");
-  leave_tag(builder); /* p */
-  leave_tag(builder); /* footer#footer */
+  TAG(("footer", "id", "footer"),
+      TAG(("p"), TEXT("Denne hjemmeside er skrevet i C.")))
   leave_tag(builder); /* body */
 }
 
@@ -341,7 +306,7 @@ void webpage_youtubeembed(struct html_builder *builder,
   sprintf(strwidth, "%d", width);
   sprintf(strheight, "%d", height);
   enter_tag(builder, "iframe", "width", strwidth, "height", strheight,
-    "src", url, "frameborder", "0", "allowfullscreen", "true", NULL);
+            "src", url, "frameborder", "0", "allowfullscreen", "true", NULL);
   insert_text(builder, "");
   leave_tag(builder); /* iframe */
 }
