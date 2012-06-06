@@ -8,7 +8,7 @@ int pagemain(int argc, char** argv) {
   UNUSED(argc);
   UNUSED(argv);
   
-  webpage_start(builder, "Front", NULL);
+  webpage_start(builder, "FanFiction", "Fanfiction");
 
   TAG(("article"),
     TAG(("header"),
