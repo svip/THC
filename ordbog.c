@@ -58,19 +58,16 @@ int write_dictionary(const char *path, void *start, struct dictionary *dict) {
   loc = (char*)newterms;
 
   for (size_t i = 0; i < dict->num_terms; i++) {
-    struct term *term = dict->terms+i;
-    strcpy(loc+str_offset,term->term);
-    term->term = loc+str_offset;
-    str_offset += strlen(term->term)+1;
-    if (term->abbr) {
-      strcpy(loc+str_offset,term->abbr);
-      term->abbr = loc+str_offset;
-      str_offset += strlen(term->abbr)+1;
+    struct term *from = dict->terms+i;
+    struct term *to = newterms+i;
+    strcpy(to->term=loc+str_offset, from->term);
+    str_offset += strlen(from->term)+1;
+    if (from->abbr) {
+      strcpy(to->abbr=loc+str_offset, from->abbr);
+      str_offset += strlen(from->abbr)+1;
     }
-    strcpy(loc+str_offset,term->translation);
-    term->translation = loc+str_offset;
-    str_offset += strlen(term->translation)+1;
-    newterms[i] = *term;
+    strcpy(to->translation=loc+str_offset, from->translation);
+    str_offset += strlen(from->translation)+1;
   }
 
   munmap(orig, dict_size);
