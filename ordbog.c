@@ -1,6 +1,7 @@
 #include "thc.h"
 
 #include <stdio.h>
+#include <string.h>
 
 char* website_pagename = "ordbog";
 
@@ -11,70 +12,76 @@ struct term {
 };
 
 struct term dictionary[] = {
-  { "Afluser", NULL, "Debugger" },
-  { "Aflusning", NULL, "Debugging" },
-  { "Almen Seriel Bus", "asb", "Universal Serial Bus eller USB" },
-  { "Arbejdslager", NULL, "Random Access Memory eller RAM" },
-  { "Borddatamat", NULL, "Desktop computer" },
-  { "Brandmur", NULL, "Firewall" },
-  { "Central beregneenhed", NULL, "Central Processing Unit eller CPU"},
-  { "Central beregningsenhed", NULL, "Central Processing Unit eller CPU"},
-  { "Datafon", NULL, "Smartphone" },
-  { "Datamat", NULL, "Computer"},
-  { "Datamatspil", NULL, "Video game eller Computer game"},
-  { "E-brev", NULL, "E-mail"},
-  { "Elektronisk Databehandling (edb)", NULL, "Information Technology eller IT" },
-  { "Elektropost", NULL, "E-mail" },
-  { "Fastpladelager", NULL, "Harddisk" },
-  { "Flet", NULL, "Merge" },
-  { "Flugttast", NULL, "Escape key" },
-  { "Gennemtvinge", NULL, "Force (changes)" },
-  { "Greltegn", NULL, "Majuscule, Capital letter eller Uppercase letter" },
   { "Hal", NULL, "Pull (changes)" },
-  { "Hjemmedatamat", NULL, "Personal Computer eller PC" },
-  { "Hjemmeside", NULL, "Web site" },
-  { "Kildetekst", NULL, "Source code" },
-  { "Klejntegn", NULL, "Minuscule eller Lowercase letter" },
-  { "Kodegrube", NULL, "Source repository" },
-  { "Kontaktskærm", NULL, "Touch screen" },
-  { "Linjeskriver", NULL, "Printer" },
-  { "Lus", NULL, "Bug" },
-  { "Løsen", NULL, "Password" },
-  { "Mappedatamat", NULL, "Laptop" },
-  { "Maskinel", NULL, "Hardware" },
-  { "Navnerum", NULL, "Namespace" },
-  { "Oversætter", NULL, "Compiler"},
-  { "Prikkode", NULL, "Quick Response Code eller QR Code" },
-  { "Programmel", NULL, "Software" },
   { "Puf", NULL, "Push (changes)" },
-  { "Råtekst", NULL, "Plain text"},
-  { "Sammenflet(ning)", NULL, "Merge"},
-  { "Sikkerhedskopi", NULL, "Backup" },
-  { "Skalprogram", NULL, "Shell script" },
-  { "Skiftenøgle", NULL, "Shift key" },
-  { "Skiftetast", NULL, "Shift key" },
-  { "Skyen", NULL, "The cloud" },
-  { "Spindellæser", NULL, "Web browser" },
-  { "Spindelsidefortolker", NULL, "Web browser engine" },
-  { "Systemskal", NULL, "Command shell eller Shell" },
-  { "Tastatur", NULL, "Keyboard" },
-  { "Tavledatamat", NULL, "Tablet" },
-  { "Tekstbehandlingsprogram", NULL, "Text editor eller Editor" },
-  { "Tekstredigeringsværktøj", NULL, "Text editor eller Editor" },
-  { "Topdatamat", NULL, "Supercomputer" },
-  { "Tving", NULL, "Force (changes)" },
-  { "Udgave", NULL, "Version" },
-  { "Det Verdensomspændende Spindel", NULL, "World Wide Web, WWW eller Web" },
   { "Virkefelt", NULL, "Scope" },
-  { "Vognretur", NULL, "Carriage return" }
+  { "Almen Seriel Bus", "asb", "Universal Serial Bus eller USB" },
+  { "Flet", NULL, "Merge" },
+  { "Tavledatamat", NULL, "Tablet" },
+  { "Gennemtvinge", NULL, "Force (changes)" },
+  { "Tekstbehandlingsprogram", NULL, "Text editor eller Editor" },
+  { "Afluser", NULL, "Debugger" },
+  { "Skiftenøgle", NULL, "Shift key" },
+  { "Elektronisk Databehandling (edb)", NULL, "Information Technology eller IT" },
+  { "Løsen", NULL, "Password" },
+  { "Spindelsidefortolker", NULL, "Web browser engine" },
+  { "Central beregneenhed", NULL, "Central Processing Unit eller CPU"},
+  { "Borddatamat", NULL, "Desktop computer" },
+  { "Fastpladelager", NULL, "Harddisk" },
+  { "Vognretur", NULL, "Carriage return" },
+  { "Oversætter", NULL, "Compiler"},
+  { "Maskinel", NULL, "Hardware" },
+  { "Skiftetast", NULL, "Shift key" },
+  { "Datafon", NULL, "Smartphone" },
+  { "Prikkode", NULL, "Quick Response Code eller QR Code" },
+  { "Skalprogram", NULL, "Shell script" },
+  { "Spindellæser", NULL, "Web browser" },
+  { "Skyen", NULL, "The cloud" },
+  { "Sammenflet(ning)", NULL, "Merge"},
+  { "E-brev", NULL, "E-mail"},
+  { "Råtekst", NULL, "Plain text"},
+  { "Hjemmedatamat", NULL, "Personal Computer eller PC" },
+  { "Arbejdslager", NULL, "Random Access Memory eller RAM" },
+  { "Central beregningsenhed", NULL, "Central Processing Unit eller CPU"},
+  { "Linjeskriver", NULL, "Printer" },
+  { "Kildetekst", NULL, "Source code" },
+  { "Datamatspil", NULL, "Video game eller Computer game"},
+  { "Flugttast", NULL, "Escape key" },
+  { "Systemskal", NULL, "Command shell eller Shell" },
+  { "Tekstredigeringsværktøj", NULL, "Text editor eller Editor" },
+  { "Datamat", NULL, "Computer"},
+  { "Kontaktskærm", NULL, "Touch screen" },
+  { "Sikkerhedskopi", NULL, "Backup" },
+  { "Elektropost", NULL, "E-mail" },
+  { "Lus", NULL, "Bug" },
+  { "Programmel", NULL, "Software" },
+  { "Topdatamat", NULL, "Supercomputer" },
+  { "Navnerum", NULL, "Namespace" },
+  { "Tastatur", NULL, "Keyboard" },
+  { "Klejntegn", NULL, "Minuscule eller Lowercase letter" },
+  { "Hjemmeside", NULL, "Web site" },
+  { "Greltegn", NULL, "Majuscule, Capital letter eller Uppercase letter" },
+  { "Udgave", NULL, "Version" },
+  { "Brandmur", NULL, "Firewall" },
+  { "Tving", NULL, "Force (changes)" },
+  { "Det Verdensomspændende Spindel", NULL, "World Wide Web, WWW eller Web" },
+  { "Aflusning", NULL, "Debugging" },
+  { "Kodegrube", NULL, "Source repository" },
+  { "Mappedatamat", NULL, "Laptop" },
 };
 static const int dictionary_entries = sizeof(dictionary)/sizeof(struct term);
+
+int cmp_term(const void *x, const void *y) {
+  return strcmp(((const struct term*)x)->term, ((const struct term*)y)->term);
+}
 
 int pagemain(int argc, char** argv) {
   struct html_builder builderv;
   struct html_builder *builder = &builderv;
   UNUSED(argc);
   UNUSED(argv);
+
+  qsort(dictionary, dictionary_entries, sizeof(struct term), cmp_term);
 
   webpage_start(builder, "Dictionary", "Ordbog");
 
