@@ -130,7 +130,7 @@ int pagemain(int argc, char** argv) {
       TAG(("header"), TAG(("h1"), TEXT("Ordbog")))
 
       if (dict == NULL) {
-        printf("Cannot read dictionary.");
+        TAG(("p"), TEXT("Cannot read dictionary."))
       } else {
         qsort(dict->terms, dict->num_terms, sizeof(struct term), cmp_term);
         TAG(("dl", "class", "dictionary"),
