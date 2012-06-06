@@ -67,7 +67,8 @@ struct season* videos_init() {
 }
 
 int pagemain(int argc, char** argv) {
-  struct html_builder builder;
+  struct html_builder builderv;
+  struct html_builder *builder = &builderv;
   struct season *first_season;
   struct season *season;
   struct episode *episode;
@@ -75,74 +76,52 @@ int pagemain(int argc, char** argv) {
   UNUSED(argc);
   UNUSED(argv);
   
-  webpage_start(&builder, "Videos", "Videoer");
+  webpage_start(builder, "Videos", "Videoer");
   
   first_season = videos_init();
-  
-  enter_tag(&builder, "article", NULL);
-  enter_tag(&builder, "header", NULL);
-  enter_tag(&builder, "h1", NULL);
-  insert_text(&builder, "Videoer");
-  leave_tag(&builder); /* h1 */
-  leave_tag(&builder); /* header */
-  season = first_season;
-  while ( season ) {
-    enter_tag(&builder, "article", "class", "season", NULL);
-    enter_tag(&builder, "header", NULL);
-    enter_tag(&builder, "h1", NULL);
-    tmp = malloc(32);
-    sprintf(tmp, "Blok %d", season->number);
-    insert_text(&builder, tmp);
-    leave_tag(&builder); /* h1 */
-    leave_tag(&builder); /* header */
-    episode = season->first_episode;
-    while ( episode ) {
-      enter_tag(&builder, "article", "class", "episode", NULL);
-      enter_tag(&builder, "header", NULL);
-      enter_tag(&builder, "h1", NULL);
-      tmp = malloc(32);
-      sprintf(tmp, "%dx%d", season->number, episode->number);
-      insert_text(&builder, tmp);
-      leave_tag(&builder); /* h1 */
-      leave_tag(&builder); /* header */
-      enter_tag(&builder, "article", "class", "episode-da", NULL);
-      enter_tag(&builder, "header", NULL);
-      enter_tag(&builder, "h1", NULL);
-      insert_text(&builder, "Med danske undertekster");
-      leave_tag(&builder); /* h1 */
-      leave_tag(&builder); /* header */
-      webpage_youtubeembed(&builder, episode->da.watchid, 480, 274);
-      enter_tag(&builder, "p", NULL);
-      enter_tag(&builder, "a", "href", youtube_url(episode->da.watchid), NULL);
-      insert_text(&builder, "Se på YouTube");
-      leave_tag(&builder); /* a */
-      leave_tag(&builder); /* p */
-      leave_tag(&builder); /* article.episode-da */
-      if ( episode->en.watchid != NULL ) {
-        enter_tag(&builder, "article", "class", "episode-en", NULL);
-        enter_tag(&builder, "header", NULL);
-        enter_tag(&builder, "h1", NULL);
-        insert_text(&builder, "With English subtitles");
-        leave_tag(&builder); /* h1 */
-        leave_tag(&builder); /* header */
-        webpage_youtubeembed(&builder, episode->en.watchid, 480, 274);
-      enter_tag(&builder, "p", NULL);
-      enter_tag(&builder, "a", "href", youtube_url(episode->en.watchid), NULL);
-      insert_text(&builder, "Watch on YouTube");
-      leave_tag(&builder); /* a */
-      leave_tag(&builder); /* p */
-        leave_tag(&builder); /* article.episode-en */
-      }
-      leave_tag(&builder); /* article.episode */
-      episode = episode->next_episode;
-    }
-    leave_tag(&builder); /* article.season */
-    season = season->next_season;
-  }
-  
-  webpage_end(&builder);
 
-  print_tree(builder.top_node, 0);
+  TAG(("article"),
+      TAG(("header"), TAG(("h1"), TEXT("Videoer")));
+      season = first_season;
+      while (season) {
+        TAG(("article", "class", "season"),
+            TAG(("header"),
+                TAG(("h1"),
+                    tmp = malloc(32);
+                    sprintf(tmp, "Blok %d", season->number);
+                    TEXT(tmp);
+                    ))
+            episode = season->first_episode;
+            while (episode) {
+              TAG(("article", "class", "episode"),
+                  TAG(("header"),
+                      TAG(("h1"),
+                          tmp = malloc(32);
+                          sprintf(tmp, "%dx%d", season->number, episode->number);
+                          TEXT(tmp);
+                          ))
+                  TAG(("article", "class", "episode-da"),
+                      TAG(("header"), TAG(("h1"), TEXT("Med danske undertekster")));
+                      webpage_youtubeembed(builder, episode->da.watchid, 480, 274);
+                      TAG(("p"),
+                          TAG(("a", "href", youtube_url(episode->da.watchid)),
+                              TEXT("Se på YouTube"))))
+                  if ( episode->en.watchid != NULL ) {
+                    TAG(("article", "class", "episode-en"),
+                        TAG(("header"),
+                            TAG(("h1"), TEXT("With English subtitles")))
+                        webpage_youtubeembed(builder, episode->en.watchid, 480, 274);
+                        TAG(("p"),
+                            TAG(("a", "href", youtube_url(episode->en.watchid), NULL),
+                                TEXT("Watch on YouTube"))))
+                      })
+                episode = episode->next_episode;
+            })
+          season = season->next_season;
+      });
+  webpage_end(builder);
+
+  print_tree(builder->top_node, 0);
 
   return 0;
 }
