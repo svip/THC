@@ -88,6 +88,9 @@ int cmp_term(const void *x, const void *y) {
     strncpy(full, term, strlen(term)-strlen(suffix));
     sprintf(((const struct term*)y)->term, "%s %s", full, suffix);
   }
+  free(term);
+  free(full);
+  free(suffix);
   return strcmp(((const struct term*)x)->term, ((const struct term*)y)->term);
 }
 
