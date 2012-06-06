@@ -21,7 +21,8 @@ install: ${PAGES}
 	@${CC} -c $< ${CFLAGS}
 
 %.thc: %.o thc.o
-	${CC} -o $@ $< thc.o ${CFLAGS}
+	@echo CC -o $@ $< thc.o
+	@${CC} -o $@ $< thc.o ${CFLAGS}
 
 ${OBJ}: config.mk
 
