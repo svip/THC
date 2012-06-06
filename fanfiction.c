@@ -28,7 +28,7 @@ int pagemain(int argc, char** argv) {
         TAG(("input", "type", "text", "id", "fanfiction-email", "name", "fanfiction-email"), );
         TAG(("label", "for", "fanfiction-text"), TEXT("Værket (påkrævet):"));
         TAG(("textarea", "cols", "52", "rows", "10", "id", "fanfiction-text", "name", "fanfiction-text"), );
-        TAG(("input", "type", "submit", "name", "fanfiction-submit"), "value", "Indsend" );
+        TAG(("input", "type", "submit", "name", "fanfiction-submit", "value", "Indsend"), );
         )
       )
     )
