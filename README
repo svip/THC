@@ -9,3 +9,9 @@ webserver to point there.
 
 You need to either include the contents of www/.htaccess in your configuration
 file, so the files are executed or allow this directory to override.
+
+System requirements
+===================
+
+A 64-bit little-endian machine with a lenient mmap()-implementation
+that permits MAP_FIXED.
