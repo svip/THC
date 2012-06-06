@@ -1,6 +1,6 @@
 include config.mk
 
-PAGES = index.thc om.thc videoer.thc ordbog.thc
+PAGES = index.thc om.thc videoer.thc ordbog.thc fanfiction.thc
 SRC = ${PAGES:.thc=.c} thc.c
 OBJ = ${SRC:.c=.o}
 
