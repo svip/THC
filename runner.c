@@ -37,7 +37,7 @@ void signal_handler(int signal, siginfo_t *info, void *context) {
           TAG(("h1"),
               sprintf(tmp, "Fejl: %s", error);
               TEXT(tmp)));
-      TAG(("table", "class" "error-table"),
+      TAG(("table", "class", "error-table"),
           TAG(("thead"),
               TAG(("tr"),
                   TAG(("th"), TEXT("Variabel"));

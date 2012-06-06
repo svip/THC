@@ -295,14 +295,16 @@ int write_dictionary(const char *path, struct dictionary *dict) {
 
 struct dictionary* read_dictionary(const char *path) {
   struct dictionary dict;
+  struct stat statbuf;
   int fd = open(path, O_RDWR);
 
   if (fd == -1) {
     return NULL;
   }
 
+  fstat (fd,&statbuf);
   (void)read(fd, &dict, sizeof(dict));
-  dict.this = mmap((void*)dict.this, dict.num_terms,
+  dict.this = mmap((void*)dict.this, statbuf.st_size,
                    PROT_READ | PROT_WRITE, MAP_SHARED | MAP_FIXED, fd, 0);
   close(fd);
   if (dict.this == (void*)-1) {
