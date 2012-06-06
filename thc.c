@@ -1,92 +1,15 @@
 #include "thc.h"
 
-#include <unistd.h>
+#include <string.h>
+
 #include <signal.h>
 #include <time.h>
+#include <fcntl.h>
+#include <sys/mman.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
 
-void signal_insertrow(struct html_builder *builder,
-                      char *signal_name,
-                      char *signal_code,
-                      char *value) {
-  TAG(("tr"),
-      TAG(("td"),
-          TEXT(signal_name);
-          TAG(("tt"), TEXT(signal_code)))
-      TAG(("td"), TEXT(value)))
-    }
-
-void signal_handler(int signal, siginfo_t *info, void *context) {
-  char *error, *tmp = malloc(64);
-  struct html_builder builderv;
-  struct html_builder *builder = &builderv;
-  UNUSED(info);
-  UNUSED(context);
-  switch (signal) {
-  case SIGSEGV:
-    error = "Segmentation fault";
-    break;
-  case SIGBUS:
-    error = "Bus error";
-    break;
-  default:
-    error = "Unhandled exception";
-  }
-  webpage_start(builder, NULL, "Fejl");
-  TAG(("article"),
-      TAG(("header"),
-          TAG(("h1"),
-              sprintf(tmp, "Fejl: %s", error);
-              TEXT(tmp)));
-      TAG(("table", "class" "error-table"),
-          TAG(("thead"),
-              TAG(("tr"),
-                  TAG(("th"), TEXT("Variabel"));
-                  TAG(("th"), TEXT("Værdi"))));
-          TAG(("tbody"),
-              tmp = malloc(32); sprintf(tmp, "%d", info->si_signo);
-              signal_insertrow(builder, "Signal number", "si_signo", tmp);
-              tmp = malloc(32); sprintf(tmp, "%d", info->si_errno);
-              signal_insertrow(builder, "Error number", "si_errno", tmp);
-              tmp = malloc(32); sprintf(tmp, "%d", info->si_code);
-              signal_insertrow(builder, "Signal code", "si_code", tmp);
-              /*
-                tmp = malloc(32); sprintf(tmp, "%d", info->si_trapno);
-                signal_insertrow(builder, "Trap number", "si_trapno", tmp);
-              */
-              tmp = malloc(32); sprintf(tmp, "%d", info->si_pid);
-              signal_insertrow(builder, "Process id", "si_pid", tmp);
-              tmp = malloc(32); sprintf(tmp, "%d", info->si_uid);
-              signal_insertrow(builder, "User id", "si_uid", tmp);
-              tmp = malloc(32); sprintf(tmp, "%d", info->si_status);
-              signal_insertrow(builder, "Exit status", "si_status", tmp);
-              tmp = malloc(32); sprintf(tmp, "%f", ((float)info->si_utime/CLOCKS_PER_SEC));
-              signal_insertrow(builder, "User time", "si_utime", tmp);
-              tmp = malloc(32); sprintf(tmp, "%f", ((float)info->si_stime/CLOCKS_PER_SEC));
-              signal_insertrow(builder, "System time", "si_stime", tmp);
-              /*
-                tmp = malloc(32); sprintf(tmp, "%f", (float)info->si_value);
-                signal_insertrow(builder, "Signal value", "si_value", tmp);
-              */
-              tmp = malloc(32); sprintf(tmp, "%d", info->si_int);
-              signal_insertrow(builder, "POSIX signal", "si_int", tmp);
-              )));
-  webpage_end(builder);
-  print_tree(builder->top_node, 0);
-  exit(1);
-}
-
-int main(int argc, char** argv) {
-  struct sigaction action;
-  action.sa_sigaction = signal_handler;
-  action.sa_flags = SA_SIGINFO;
-  sigemptyset(&action.sa_mask);
-  sigaction(SIGSEGV, &action, NULL);
-  printf("Content-type: text/html; charset=utf-8\r\n");
-  printf("Cache-control: max-age=3600\r\n");
-  printf("\r\n");
-  printf("<!doctype html>\r\n");
-  return pagemain(argc, argv);
-}
 
 struct list* list_cons(void* data, struct list *list) {
   struct list *new_cons = malloc(sizeof(struct list));
@@ -315,4 +238,76 @@ char *youtube_url(char *watchid) {
   char *tmp = malloc(64);
   sprintf(tmp, "http://youtube.com/watch?v=%s", watchid);
   return tmp;
+}
+
+size_t term_size(struct term *term) {
+  return strlen(term->term)+1
+    + (term->abbr ? strlen(term->abbr)+1 : 0)
+    + strlen(term->translation)+1;
+}
+
+int write_dictionary(const char *path, void *start, struct dictionary *dict) {
+  int fd = open(path, O_CREAT | O_RDWR | O_TRUNC,
+                S_IRUSR | S_IWUSR | S_IROTH | S_IRGRP);
+  long str_offset = sizeof(*dict) + dict->num_terms * sizeof(struct term);
+  long offset = (long)start & ~(sysconf(_SC_PAGE_SIZE) - 1);
+
+  if (-1 == fd) {
+    return -1;
+  }
+
+  long dict_size = str_offset;
+
+  for (size_t i = 0; i < dict->num_terms; i++) {
+    dict_size += term_size(dict->terms+i)+1;
+  }
+
+  lseek(fd, dict_size - 1, SEEK_SET);
+  write (fd, "", 1);
+
+  void *orig = mmap((void*)offset, dict_size,
+                    PROT_WRITE | PROT_READ, MAP_SHARED, fd, 0);
+  char *loc = (char*)orig;
+  struct dictionary *newdict = (struct dictionary*)loc;
+  struct term *newterms = (struct term*)(loc+sizeof(*newdict));
+  newdict->this = newdict;
+  newdict->num_terms = dict->num_terms;
+  newdict->terms = newterms;
+  loc = (char*)newterms;
+
+  for (size_t i = 0; i < dict->num_terms; i++) {
+    struct term *from = dict->terms+i;
+    struct term *to = newterms+i;
+    strcpy(to->term=loc+str_offset, from->term);
+    str_offset += strlen(from->term)+1;
+    if (from->abbr) {
+      strcpy(to->abbr=loc+str_offset, from->abbr);
+      str_offset += strlen(from->abbr)+1;
+    }
+    strcpy(to->translation=loc+str_offset, from->translation);
+    str_offset += strlen(from->translation)+1;
+  }
+
+  munmap(orig, dict_size);
+  close(fd);
+  return 0;
+}
+
+struct dictionary* read_dictionary(const char *path) {
+  struct dictionary dict;
+  int fd = open(path, O_RDWR);
+
+  if (fd == -1) {
+    return NULL;
+  }
+
+  read(fd, &dict, sizeof(dict));
+  dict.this = mmap((void*)dict.this, dict.num_terms,
+                   PROT_READ | PROT_WRITE, MAP_SHARED | MAP_FIXED, fd, 0);
+  close(fd);
+  if (dict.this == (void*)-1) {
+    return NULL;
+  } else {
+    return dict.this;
+  }
 }
