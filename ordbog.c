@@ -64,7 +64,7 @@ struct term dictionary[] = {
   { "Udgave", NULL, "Version" },
   { "Brandmur", NULL, "Firewall" },
   { "Tving", NULL, "Force (changes)" },
-  { "Det Verdensomspændende Spindel", NULL, "World Wide Web, WWW eller Web" },
+  { "Verdensomspændende Spindel,Det", NULL, "World Wide Web, WWW eller Web" },
   { "Aflusning", NULL, "Debugging" },
   { "Kodegrube", NULL, "Source repository" },
   { "Mappedatamat", NULL, "Laptop" },
@@ -72,6 +72,22 @@ struct term dictionary[] = {
 static const int dictionary_entries = sizeof(dictionary)/sizeof(struct term);
 
 int cmp_term(const void *x, const void *y) {
+  char *suffix = malloc(6);
+  char *full = malloc(64);
+  char *term = malloc(64);
+  term = ((const struct term*)x)->term;
+  if (strchr(term, ',') != NULL) {
+    strncpy(suffix, strchr(term, ','), strlen(term));
+    strncpy(full, term, strlen(term)-strlen(suffix));
+    sprintf(((const struct term*)x)->term, "%s %s", full, suffix);
+  }
+  term = malloc(64);
+  term = ((const struct term*)y)->term;
+  if (strchr(term, ',') != NULL) {
+    strncpy(suffix, strchr(term, ','), strlen(term));
+    strncpy(full, term, strlen(term)-strlen(suffix));
+    sprintf(((const struct term*)y)->term, "%s %s", full, suffix);
+  }
   return strcmp(((const struct term*)x)->term, ((const struct term*)y)->term);
 }
 
