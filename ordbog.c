@@ -38,12 +38,12 @@ int pagemain(int argc, char** argv) {
   UNUSED(argc);
   UNUSED(argv);
 
-  webpage_start(builder, "Dictionary", "Ordbog");
+  webpage_start(builder, "Dictionary", "Engelsk ordbog");
 
   dict = read_dictionary("ordbog.data");
 
   TAG(("article"),
-      TAG(("header"), TAG(("h1"), TEXT("Ordbog")))
+      TAG(("header"), TAG(("h1"), TEXT("Engelsk ordbog")))
 
       if (dict == NULL) {
         TAG(("p"), TEXT("Cannot read dictionary."))
