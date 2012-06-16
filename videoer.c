@@ -63,6 +63,9 @@ struct season* videos_init() {
   append_episode(current_season, 0,
                  "lgmA9z8Sb5E", NULL,
                  "0ohC89vJjnY", NULL);
+  append_episode(current_season, 1,
+                 "F3HHS50dA6g", "DIKUrevy-afsnit",
+                 NULL, NULL);
   return first_season;
 }
 
