@@ -14,7 +14,7 @@ int pagemain(int argc, char** argv) {
     TAG(("header"),
       TAG(("h1"),
         TAG(("b"), TEXT("topDatamat 0x1"));
-        TEXT(" udgivet ! (");/*
+        TEXT(" udgivet !");/* (
         TAG(("a", "href", "http://youtube.com/watch?v=0ohC89vJjnY"),
           TEXT("Click here for English subtitles"))
         TEXT(")")*/));
