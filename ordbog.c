@@ -30,6 +30,45 @@ char *blank_char(char *str, char chr) {
   return p;
 }
 
+struct dictionary* gross_ugly_hack(const char *path) {
+  struct dictionary *ret = NULL;
+  struct stat statbuf;
+  char *data;
+  int fd = open(path, O_RDWR);
+
+  if (fd == -1) {
+    return NULL;
+  }
+
+  fstat (fd,&statbuf);
+
+  data = mmap(NULL, statbuf.st_size,
+              PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+
+  long long base = *(long long*)data;
+
+  ret = malloc(sizeof(*ret));
+  ret->this = ret;
+
+  ret->num_terms = ((long long*)data)[1];
+  ret->terms = malloc(ret->num_terms * sizeof(struct term));
+  for (unsigned int i = 0; i < ret->num_terms; i++) {
+    long long term_offset = ((long long*)data)[3+i*3];
+    long long abbr_offset = ((long long*)data)[3+i*3+1];
+    long long transl_offset = ((long long*)data)[3+i*3+2];
+    ret->terms[i].term = malloc(strlen(data+(term_offset-base)));
+    strcpy(ret->terms[i].term, data+(term_offset-base));
+    if (abbr_offset) {
+      ret->terms[i].abbr = malloc(strlen(data+(abbr_offset-base)));
+      strcpy(ret->terms[i].abbr, data+(abbr_offset-base));
+    }
+    ret->terms[i].translation = malloc(strlen(data+(transl_offset-base)));
+    strcpy(ret->terms[i].translation, data+(transl_offset-base));
+  }
+  close(fd);
+  return ret;
+}
+
 int pagemain(int argc, char** argv) {
   struct html_builder builderv;
   struct html_builder *builder = &builderv;
@@ -40,7 +79,12 @@ int pagemain(int argc, char** argv) {
 
   webpage_start(builder, "Dictionary", "Engelsk ordbog");
 
-  dict = read_dictionary("ordbog.data");
+  if (sizeof(void*) == 8) {
+    dict = read_dictionary("ordbog.data");
+  } else {
+    /* Oh-uh... we're not a 64-bit machine. */
+    dict = gross_ugly_hack("ordbog.data");
+  }
 
   TAG(("article"),
       TAG(("header"), TAG(("h1"), TEXT("Engelsk ordbog")))
