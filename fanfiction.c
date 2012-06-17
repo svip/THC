@@ -3,11 +3,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define MAXLEN 500
+#define MAXLEN 5000
 /* For adding line breaking and trailing NUL */
 #define MAXINPUT MAXLEN+2
 
-void unencode(char *src, char *last, char *dest) {
+void uudecode(char *src, char *last, char *dest) {
   for (; src != last; src++, dest++) {
     if (*src == '+')
       *dest = ' ';
@@ -29,7 +29,9 @@ int handle_postdata ( void ) {
   long len;
   
   lenstr = getenv("CONTENT_LENGTH");
-  if ( lenstr == NULL || (len = atoi(lenstr)) <= 1 || len > MAXLEN )
+  if ( lenstr == NULL
+    || (len = atoi(lenstr)) <= 1
+    || len > MAXLEN )
     return 1;
   
   FILE *f;
@@ -37,7 +39,7 @@ int handle_postdata ( void ) {
   if ( dump == NULL )
     return 1;
   
-  unencode(input, input+len, data);
+  uudecode(input, input+len, data);
   f = fopen("data/test.dump", "a");
   if ( f != NULL )
     fputs(data, f);
@@ -63,7 +65,7 @@ int pagemain(int argc, char** argv) {
     if ( getenv("CONTENT_LENGTH") != NULL )
       handle_postdata();
     else {
-    TAG(("form", "method", "post", "enctype", "multipart/form-data"),
+    TAG(("form", "method", "post"),/*, "enctype", "multipart/form-data"),*/
       TAG(("fieldset"),
         TAG(("legend"), TEXT("Indsend fanfiction"));
         TAG(("p"), TEXT("Er vi vilde med dit fanfiction, så kan det være vi putter det på hjemmeside, så alle kan læse det."));
