@@ -43,7 +43,7 @@ struct dictionary* gross_ugly_hack(const char *path) {
   fstat (fd,&statbuf);
 
   data = mmap(NULL, statbuf.st_size,
-              PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+              PROT_READ, MAP_SHARED, fd, 0);
 
   long long base = *(long long*)data;
 
@@ -56,14 +56,11 @@ struct dictionary* gross_ugly_hack(const char *path) {
     long long term_offset = ((long long*)data)[3+i*3];
     long long abbr_offset = ((long long*)data)[3+i*3+1];
     long long transl_offset = ((long long*)data)[3+i*3+2];
-    ret->terms[i].term = malloc(strlen(data+(term_offset-base)));
-    strcpy(ret->terms[i].term, data+(term_offset-base));
+    ret->terms[i].term = data+(term_offset-base);
     if (abbr_offset) {
-      ret->terms[i].abbr = malloc(strlen(data+(abbr_offset-base)));
-      strcpy(ret->terms[i].abbr, data+(abbr_offset-base));
+      ret->terms[i].abbr = data+(abbr_offset-base);
     }
-    ret->terms[i].translation = malloc(strlen(data+(transl_offset-base)));
-    strcpy(ret->terms[i].translation, data+(transl_offset-base));
+    ret->terms[i].translation = data+(transl_offset-base);
   }
   close(fd);
   return ret;
