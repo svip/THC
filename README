@@ -15,3 +15,9 @@ System requirements
 
 A 64-bit little-endian machine with a lenient mmap()-implementation
 that permits MAP_FIXED.
+
+Known bugs
+==========
+
+We cannot ensure that people are actually naked when they view the raw source
+code from the website.
