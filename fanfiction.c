@@ -2,7 +2,9 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
+#define DATA_DIR "/var/www/topdatamat/c/data"
 #define MAXLEN 5000
 /* For adding line breaking and trailing NUL */
 #define MAXINPUT MAXLEN+2
@@ -27,6 +29,7 @@ int handle_postdata ( void ) {
   char *lenstr, *dump;
   char input[MAXINPUT], data[MAXINPUT];
   long len;
+  const char *datadir = getenv("DATA_DIR") ? getenv("DATA_DIR") : DATA_DIR;
   
   lenstr = getenv("CONTENT_LENGTH");
   if ( lenstr == NULL
@@ -40,9 +43,15 @@ int handle_postdata ( void ) {
     return 1;
   
   uudecode(input, input+len, data);
-  f = fopen("data/test.dump", "a");
-  if ( f != NULL )
-    fputs(data, f);
+  
+  char path[75];
+  sprintf(path, "%s/%s", datadir, "test.dump");
+  f = fopen(path, "a");
+
+  if ( f == NULL )
+    return 1;
+
+  fputs(data, f);
   fclose(f);
   
   return 0;
