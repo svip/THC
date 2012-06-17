@@ -2,7 +2,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
 
 #define DATA_DIR "/var/www/topdatamat/c/data"
 #define MAXLEN 5000
@@ -71,9 +70,11 @@ int pagemain(int argc, char** argv) {
     TAG(("p"), TEXT("Flere har klaget til indbakken at der ikke er et sted hvor man dele sine egne visioner og idéer til topDatamat."));
     TAG(("p"), TEXT("For at rette op på denne mangel, har vi skabt denne underside."));
     TAG(("p"), TEXT("Men her er først lidt inspiration:"));
-    if ( getenv("CONTENT_LENGTH") != NULL )
-      handle_postdata();
-    else {
+    if ( getenv("CONTENT_LENGTH") != NULL ) {
+      if ( handle_postdata() == 0 ) {
+    TAG(("p", "style", "font-weight: bold;"), TEXT("Tak for din fanfiction, vi vil græde (af glæde) over dets indhold!"));
+      }
+    } else {
     TAG(("form", "method", "post"),/*, "enctype", "multipart/form-data"),*/
       TAG(("fieldset"),
         TAG(("legend"), TEXT("Indsend fanfiction"));
