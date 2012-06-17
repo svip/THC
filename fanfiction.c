@@ -1,6 +1,51 @@
 #include "thc.h"
 
 #include <stdio.h>
+#include <stdlib.h>
+
+#define MAXLEN 500
+/* For extra data, such as "=" */
+#define EXTRA 5
+/* For adding line breaking and trailing NUL */
+#define MAXINPUT MAXLEN+EXTRA+2
+
+void unencode(char *src, char *last, char *dest) {
+  for (; src != last; src++, dest++) {
+    if (*src == '+')
+      *dest = ' ';
+    else if (*src == '%') {
+      unsigned int code;
+      if ( sscanf(src+1, "%2x", &code) != 1 ) code = '?';
+      *dest = code;
+      src += 2;
+    } else
+      *dest = *src;
+  }
+  *dest = '\n';
+  *++dest = '\0';
+}
+
+int handle_postdata ( void ) {
+  char *lenstr, *dump;
+  char input[MAXINPUT], data[MAXINPUT];
+  long len;
+  
+  lenstr = getenv("CONTENT_LENGTH");
+  if ( lenstr == NULL || sscanf(lenstr, "%ld", &len) != 1 || len > MAXLEN )
+    return 1;
+  
+  FILE *f;
+  dump = fgets(input, len+1, stdin);
+  if ( dump == NULL )
+    return 1;
+  unencode(input+EXTRA, input+len, data);
+  f = fopen("data/test.dump", "a");
+  if ( f != NULL )
+    fputs(data, f);
+  fclose(f);
+  
+  return 0;
+}
 
 int pagemain(int argc, char** argv) {
   struct html_builder builderv;
@@ -16,6 +61,9 @@ int pagemain(int argc, char** argv) {
     TAG(("p"), TEXT("Flere har klaget til indbakken at der ikke er et sted hvor man dele sine egne visioner og idéer til topDatamat."));
     TAG(("p"), TEXT("For at rette op på denne mangel, har vi skabt denne underside."));
     TAG(("p"), TEXT("Men her er først lidt inspiration:"));
+    if ( getenv("CONTENT_LENGTH") != NULL )
+      handle_postdata();
+    else {
     TAG(("form", "method", "post", "enctype", "multipart/form-data"),
       TAG(("fieldset"),
         TAG(("legend"), TEXT("Indsend fanfiction"));
@@ -31,6 +79,7 @@ int pagemain(int argc, char** argv) {
         TAG(("input", "type", "submit", "name", "fanfiction-submit", "value", "Indsend"), );
         )
       )
+    }
     )
   )
 
