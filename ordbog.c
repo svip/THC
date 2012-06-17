@@ -93,7 +93,8 @@ int pagemain(int argc, char** argv) {
         TAG(("dl", "class", "dictionary"),
             for (size_t i = 0; i < dict->num_terms; i++) {
               TAG(("dt"),
-                  term = dict->terms[i].term;
+                  term = malloc(strlen(dict->terms[i].term));
+                  strcpy(term, dict->terms[i].term);
                   if (strchr(term, '|') != NULL) {
                     term = blank_char(term, '|');
                   }
