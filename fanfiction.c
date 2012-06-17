@@ -73,6 +73,8 @@ int pagemain(int argc, char** argv) {
     if ( getenv("CONTENT_LENGTH") != NULL ) {
       if ( handle_postdata() == 0 ) {
     TAG(("p", "style", "font-weight: bold;"), TEXT("Tak for din fanfiction, vi vil græde (af glæde) over dets indhold!"));
+      } else {
+    TAG(("p", "style", "font-weight: bold;"), TEXT("Dit inddata gik i stykker, hvad fanden har du gang i?!"));
       }
     } else {
     TAG(("form", "method", "post"),/*, "enctype", "multipart/form-data"),*/
