@@ -52,6 +52,8 @@ void append_episode(struct season *current_season,
   }
   if ( current_season->first_episode == NULL )
     current_season->first_episode = new_episode;
+  else
+    current_season->last_episode->next_episode = new_episode;
   current_season->last_episode = new_episode;
 }
 
