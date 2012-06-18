@@ -210,7 +210,7 @@ void webpage_start(struct html_builder *builder,
   enter_tag(builder, "body", page_name != NULL ? NULL : "id", "page-fatal", NULL);
   TAG(("header", "id", "header"),
       TAG(("div", "id", "viewsource"),
-          TAG(("a", "href", printbf("./%s", __FILE__)), TEXT("Se koden nøgen")))
+          TAG(("a", "href", printbf("./%s", source_file)), TEXT("Se koden nøgen")))
       if ( page_name != NULL ) {
         TAG(("div", "id", "languages"),);
         TAG(("div", "id", "indbakken"),
