@@ -9,7 +9,7 @@
 #define MAXINPUT MAXLEN+2
 
 void uudecode(char *src, char *last, char *dest) {
-  for (; *src && src < last; src++, dest++) {
+  for (; src < last && *src; src++, dest++) {
     if (*src == '+')
       *dest = ' ';
     else if (*src == '%') {
