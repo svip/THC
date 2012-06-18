@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+const char *source_file = __FILE__;
+
 #define DATA_DIR "/var/www/topdatamat/c/data"
 #define MAXLEN 5000
 /* For adding line breaking and trailing NUL */

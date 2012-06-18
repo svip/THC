@@ -2,6 +2,8 @@
 
 #include <stdio.h>
 
+const char *source_file = __FILE__;
+
 struct episode {
   int number;
   struct {

@@ -9,6 +9,8 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+const char *source_file = __FILE__;
+
 int cmp_term(const void *x, const void *y) {
    char *termx = ((const struct term*)x)->term;
   char *termy = ((const struct term*)y)->term;

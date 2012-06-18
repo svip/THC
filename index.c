@@ -2,6 +2,8 @@
 
 #include <stdio.h>
 
+const char *source_file = __FILE__;
+
 int pagemain(int argc, char** argv) {
   struct html_builder builderv;
   struct html_builder *builder = &builderv;
