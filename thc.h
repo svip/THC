@@ -9,6 +9,8 @@
 
 #define UNUSED(x) (x=x)
 
+extern const char *source_file;
+
 struct attr {
   const char *key;
   const char *val;
