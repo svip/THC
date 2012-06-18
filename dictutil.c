@@ -6,6 +6,8 @@
 #include <string.h>
 #include <unistd.h>
 
+char *source_file = NULL; /* Gross hack */
+
 char *progname;
 
 void usage() {
