@@ -156,19 +156,19 @@ article.episode article {
 	margin-right: 25px;
 }
 
-#dictionary dl.dictionary {
+dl.dictionary {
 	/*-moz-column-width: 300px;
 	-webkit-column-width: 300px;
 	column-width: 300px;*/
 }
-#dictionary dt {
+dl.dictionary dt {
 	font-weight: bold;
 }
-#dictionary dd {
+dl.dictionary dd {
 	margin-bottom: 5px;
-	font-style: italic;
+	/*font-style: italic;*/
 }
-#dictionary dd span {
+dl.dictionary dd span {
 	font-style: normal;
 }
 #dictionary .dictionary-block {
