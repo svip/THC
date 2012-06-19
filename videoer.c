@@ -124,7 +124,11 @@ int pagemain(int argc, char** argv) {
                   TAG(("header"),
                       TAG(("h1"), TEXT(printbf("%dx%d", season->number, episode->number))));
                   TAG(("article", "class", "episode-da"),
-                      TAG(("header"), TAG(("h1"), TEXT("Med danske undertekster")));
+                      TAG(("header"),
+                      if ( episode->da.title != NULL ) {
+                        TAG(("h1"), TEXT(episode->da.title));
+                      }
+                      TAG(("h2"), TEXT("Med danske undertekster")));
                       webpage_youtubeembed(builder, episode->da.watchid, 480, 274);
                       TAG(("p"),
                           TAG(("a", "href", youtube_url(episode->da.watchid)),
@@ -132,7 +136,10 @@ int pagemain(int argc, char** argv) {
                   if ( episode->en.watchid != NULL ) {
                     TAG(("article", "class", "episode-en"),
                         TAG(("header"),
-                            TAG(("h1"), TEXT("With English subtitles")))
+                        if ( episode->en.title != NULL ) {
+                          TAG(("h1"), TEXT(episode->en.title));
+                        }
+                        TAG(("h2"), TEXT("With English subtitles")))
                         webpage_youtubeembed(builder, episode->en.watchid, 480, 274);
                         TAG(("p"),
                             TAG(("a", "href", youtube_url(episode->en.watchid), NULL),
