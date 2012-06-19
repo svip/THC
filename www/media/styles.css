@@ -168,6 +168,10 @@ article.episode article header h1 {
 article.episode article header h2 {
 	font-size: 105%;
 }
+article.episode h1,
+article.episode h2 {
+	margin: 0;
+}
 
 dl.dictionary {
 	/*-moz-column-width: 300px;
