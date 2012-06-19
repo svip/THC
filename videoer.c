@@ -144,7 +144,8 @@ int pagemain(int argc, char** argv) {
                         TAG(("p"),
                             TAG(("a", "href", youtube_url(episode->en.watchid), NULL),
                                 TEXT("Watch on YouTube"))))
-                      })
+                  }
+                TAG(("div", "class", "clear"), TEXT("")));
                 episode = episode->next_episode;
             })
           season = season->next_season;
