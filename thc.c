@@ -212,7 +212,7 @@ void webpage_start(struct html_builder *builder,
       TAG(("div", "id", "viewsource"),
           TAG(("a", "href", printbf("./%s", source_file)), TEXT("Se koden nøgen")))
       if ( page_name != NULL ) {
-        TAG(("div", "id", "languages"),);
+        /*TAG(("div", "id", "languages"),);*/
         TAG(("div", "id", "indbakken"),
             TEXT("Send dine spørgsmål til ");
             TAG(("a", "href", "mailto:indbakken@topdatamat.dk"),
