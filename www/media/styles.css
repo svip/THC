@@ -170,7 +170,7 @@ article.episode article header h2 {
 }
 article.episode h1,
 article.episode h2 {
-	margin: 0;
+	margin: 2px 0;
 }
 
 dl.dictionary {
