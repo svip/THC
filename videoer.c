@@ -15,6 +15,8 @@ struct episode {
     char *title;
   } en;
   struct episode *next_episode;
+  struct episode *first_special;
+  struct episode *last_special;
 };
 
 struct season {
@@ -36,40 +38,63 @@ struct season* create_season(struct season *current_season,
   return new_season;
 }
 
-void append_episode(struct season *current_season,
+struct episode *append_episode(struct season *current_season,
                     int number,
                     char *da_id, char *da_title,
                     char *en_id, char *en_title) {
   struct episode *new_episode;
   new_episode = malloc(sizeof(struct episode));
   new_episode->number = number;
+  new_episode->first_special = NULL;
   new_episode->da.watchid = da_id;
   new_episode->da.title = da_title;
-  if ( en_id != NULL ) {
-    new_episode->en.watchid = en_id;
-    new_episode->en.title = en_title;
-  } else {
-    new_episode->en.watchid = NULL;
-    new_episode->en.title = NULL;
-  }
+  new_episode->en.watchid = en_id;
+  new_episode->en.title = en_title;
   if ( current_season->first_episode == NULL )
     current_season->first_episode = new_episode;
   else
     current_season->last_episode->next_episode = new_episode;
   current_season->last_episode = new_episode;
+  return new_episode;
+}
+
+void append_specialepisode(struct episode *episode, 
+                      char *da_id, char *da_title,
+                      char *en_id, char *en_title) {
+  struct episode *new_episode;
+  new_episode = malloc(sizeof(struct episode));
+  new_episode->number = 0;
+  new_episode->first_special = NULL;
+  new_episode->da.watchid = da_id;
+  new_episode->da.title = da_title;
+  new_episode->en.watchid = en_id;
+  new_episode->en.title = en_title;
+  if ( episode->first_special == NULL )
+    episode->first_special = new_episode;
+  else
+    episode->last_special->next_episode = new_episode;
+  episode->last_special = new_episode;
 }
 
 struct season* videos_init() {
   struct season *first_season;
   struct season *current_season;
+  struct episode *working_episode;
   first_season = create_season(NULL, 0);
   current_season = first_season;
-  append_episode(current_season, 0,
-                 "lgmA9z8Sb5E", NULL,
-                 "0ohC89vJjnY", NULL);
-  append_episode(current_season, 1,
-                 "F3HHS50dA6g", "DIKUrevy-afsnit",
-                 NULL, NULL);
+  working_episode = append_episode(current_season, 0,
+                                 "lgmA9z8Sb5E", NULL,
+                                 "0ohC89vJjnY", NULL);
+  UNUSED(working_episode);
+  working_episode = append_episode(current_season, 1,
+                                 "F3HHS50dA6g", "DIKUrevy-afsnit",
+                                 NULL, NULL);
+  UNUSED(working_episode);
+  /* 
+  append_specialepisode(working_episode,
+                        "", "Bjarne interview",
+                        NULL, NULL);
+  */
   return first_season;
 }
 
