@@ -155,6 +155,12 @@ article.episode article {
 	float: left;
 	margin-right: 25px;
 }
+article.season > header h1 {
+	font-size: 140%;
+}
+article.episode > header h1 {
+	font-size: 130%;
+}
 article.episode article header h1 {
 	font-size: 120%;
 }
