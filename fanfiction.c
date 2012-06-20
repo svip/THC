@@ -70,10 +70,10 @@ void write_fanfiction ( char *data, FILE *f ) {
   if ( f == NULL )
     return;
   
-  newdata = replace(data, "fanfiction_title=", "\\title{");
-  newdata = replace(newdata, "&fanfiction_author=", "}\n\\author{");
-  newdata = replace(newdata, "&fanfiction_email=", " (");
-  newdata = replace(newdata, "&fanfiction_text=", ")}\n\n\\begin{document}\n");
+  newdata = replace(data, "fanfiction-title=", "\\title{");
+  newdata = replace(newdata, "&fanfiction-author=", "}\n\\author{");
+  newdata = replace(newdata, "&fanfiction-email=", " (");
+  newdata = replace(newdata, "&fanfiction-text=", ")}\n\n\\begin{document}\n");
   printbf(newdata, "\\documentclass[a4paper,11pt]{article}\n\\usepackage[utf8]{inputenc}\n\\usepackage[T1]{fontenc}\n\\usepackage[danish]{babel}\n\n%s\n\\end{document}", newdata);
   fputs(newdata, f);
 }
