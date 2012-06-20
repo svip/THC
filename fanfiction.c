@@ -101,7 +101,7 @@ int handle_postdata ( void ) {
   
   char path[75];
   sprintf(path, "%s/%s", datadir, "test.tex");
-  f = fopen(path, "a");
+  f = fopen(path, "w");
   
   if ( f == NULL )
     return 1;
