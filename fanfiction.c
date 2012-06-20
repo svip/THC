@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 const char *source_file = __FILE__;
 
@@ -10,7 +11,45 @@ const char *source_file = __FILE__;
 /* For adding line breaking and trailing NUL */
 #define MAXINPUT MAXLEN+2
 
-void uudecode(char *src, char *last, char *dest) {
+/* Copied from http://www.daniweb.com/software-development/c/code/216517/strings-search-and-replace */
+char *replace ( const char *src, const char *from, const char *to ) {
+  size_t size = strlen(src) + 1;
+  size_t fromlen = strlen(from);
+  size_t tolen = strlen(to);
+  char *value = malloc(size);
+  char *dst = value;
+  if ( value != NULL ) {
+    for ( ;; ) {
+      const char *match = strstr(src, from);
+      if ( match != NULL )
+        {
+        size_t count = match - src;
+        char *temp;
+        size += tolen - fromlen;
+        temp = realloc(value, size);
+        if ( temp == NULL ) {
+          free(value);
+          return NULL;
+        }
+        dst = temp + (dst - value);
+        value = temp;
+        memmove(dst, src, count);
+        src += count;
+        dst += count;
+        memmove(dst, to, tolen);
+        src += fromlen;
+        dst += tolen;
+      } else {
+        /* No match */
+        strcpy(dst, src);
+        break;
+      }
+    }
+  }
+  return value;
+}
+
+void uudecode ( char *src, char *last, char *dest ) {
   for (; src < last && *src; src++, dest++) {
     if (*src == '+')
       *dest = ' ';
@@ -24,6 +63,19 @@ void uudecode(char *src, char *last, char *dest) {
   }
   *dest = '\n';
   *++dest = '\0';
+}
+
+void write_fanfiction ( char *data, FILE *f ) {
+  char *newdata;
+  if ( f == NULL )
+    return;
+  
+  newdata = replace(data, "fanfiction_title=", "\\title{");
+  newdata = replace(newdata, "&fanfiction_author=", "}\n\\author{");
+  newdata = replace(newdata, "&fanfiction_email=", " (");
+  newdata = replace(newdata, "&fanfiction_text=", ")}\n\n\\begin{document}\n");
+  printbf(newdata, "\\documentclass[a4paper,11pt]{article}\n\\usepackage[utf8]{inputenc}\n\\usepackage[T1]{fontenc}\n\\usepackage[danish]{babel}\n\n%s\n\\end{document}", newdata);
+  fputs(newdata, f);
 }
 
 int handle_postdata ( void ) {
@@ -46,13 +98,13 @@ int handle_postdata ( void ) {
   uudecode(input, input+len, data);
   
   char path[75];
-  sprintf(path, "%s/%s", datadir, "test.dump");
+  sprintf(path, "%s/%s", datadir, "test.tex");
   f = fopen(path, "a");
-
+  
   if ( f == NULL )
     return 1;
-
-  fputs(data, f);
+  
+  write_fanfiction(data, f);
   fclose(f);
   
   return 0;
@@ -71,7 +123,7 @@ int pagemain(int argc, char** argv) {
       TAG(("h1"), TEXT("Fanfiction"));
     TAG(("p"), TEXT("Flere har klaget til indbakken at der ikke er et sted hvor man dele sine egne visioner og idéer til topDatamat."));
     TAG(("p"), TEXT("For at rette op på denne mangel, har vi skabt denne underside."));
-    TAG(("p"), TEXT("Men her er først lidt inspiration:"));
+    /*TAG(("p"), TEXT("Men her er først lidt inspiration:"));*/
     if ( getenv("CONTENT_LENGTH") != NULL ) {
       if ( handle_postdata() == 0 ) {
     TAG(("p", "style", "font-weight: bold;"), TEXT("Tak for din fanfiction, vi vil græde (af glæde) over dets indhold!"));
