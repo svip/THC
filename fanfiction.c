@@ -67,6 +67,7 @@ void uudecode ( char *src, char *last, char *dest ) {
 
 void write_fanfiction ( char *data, FILE *f ) {
   char *newdata;
+  char output[MAXINPUT];
   if ( f == NULL )
     return;
   
@@ -74,8 +75,9 @@ void write_fanfiction ( char *data, FILE *f ) {
   newdata = replace(newdata, "&fanfiction-author=", "}\n\\author{");
   newdata = replace(newdata, "&fanfiction-email=", " (");
   newdata = replace(newdata, "&fanfiction-text=", ")}\n\n\\begin{document}\n");
-  printbf(newdata, "\\documentclass[a4paper,11pt]{article}\n\\usepackage[utf8]{inputenc}\n\\usepackage[T1]{fontenc}\n\\usepackage[danish]{babel}\n\n%s\n\\end{document}", newdata);
-  fputs(newdata, f);
+  newdata = replace(newdata, "&fanfiction-submit=Indsend", "");
+  printbf(output, "\\documentclass[a4paper,11pt]{article}\n\\usepackage[utf8]{inputenc}\n\\usepackage[T1]{fontenc}\n\\usepackage[danish]{babel}\n\n%s\n\\end{document}", newdata);
+  fputs(output, f);
 }
 
 int handle_postdata ( void ) {
