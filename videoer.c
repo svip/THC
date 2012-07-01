@@ -88,7 +88,7 @@ struct season* videos_init() {
   UNUSED(working_episode);
   working_episode = append_episode(current_season, 1,
                                  "F3HHS50dA6g", "DIKUrevy-afsnit",
-                                 NULL, NULL);
+                                 "TTVCaZVUvC0", "DIKUrevy episode");
   UNUSED(working_episode);
   /* 
   append_specialepisode(working_episode,

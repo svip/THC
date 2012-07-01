@@ -16,10 +16,10 @@ int pagemain(int argc, char** argv) {
     TAG(("header"),
       TAG(("h1"),
         TAG(("b"), TEXT("topDatamat 0x1"));
-        TEXT(" udgivet !");/* (
-        TAG(("a", "href", "http://youtube.com/watch?v=0ohC89vJjnY"),
+        TEXT(" udgivet! (");
+        TAG(("a", "href", "http://youtube.com/watch?v=TTVCaZVUvC0"),
           TEXT("Click here for English subtitles"))
-        TEXT(")")*/));
+        TEXT(")")));
     TAG(("div", "class", "post"),
       webpage_youtubeembed(builder, "F3HHS50dA6g", 853, 480);
       TAG(("p"), TEXT("Så er andet afsnit af topDatamat her endeligt!"));
