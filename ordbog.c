@@ -68,6 +68,17 @@ struct dictionary* gross_ugly_hack(const char *path) {
   return ret;
 }
 
+char *parse_translation(char *translation) {
+  /**
+   * Intend is to make it parse pipes into a natural
+   * language list, such as "a|b|c" becoming "a, b eller c"
+   * and let's see if it is possible to add a <span> around
+   * the words,
+   * e.g. "<span>a</span>, <span>b</span> eller <span>c</span>"
+   */
+  return translation;
+}
+
 int pagemain(int argc, char** argv) {
   struct html_builder builderv;
   struct html_builder *builder = &builderv;
@@ -106,7 +117,7 @@ int pagemain(int argc, char** argv) {
                   } else {
                     TEXT(dict->terms[i].term);
                   })
-                TAG(("dd"), TEXT(dict->terms[i].translation));
+                TAG(("dd"), TEXT(parse_translation(dict->terms[i].translation)));
             });
       });
   webpage_end(builder);
