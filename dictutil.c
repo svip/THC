@@ -38,7 +38,7 @@ int main(int argc, char** argv) {
     }
     char *term = argv[3];
     char *translation = argv[4];
-    char *abbr = argc >= 5 ? argv[5] : NULL;
+    char *abbr = argc >= 6 ? argv[5] : NULL;
     struct dictionary *dict = dict_or_death(file);
     struct term *terms = malloc((dict->num_terms+1)*sizeof(struct term));
     memcpy(terms,dict->terms,dict->num_terms*sizeof(struct term));
