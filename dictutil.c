@@ -32,13 +32,13 @@ int main(int argc, char** argv) {
   char *file = argv[1];
   if (strcmp(argv[2], "insert") == 0) {
     if (argc < 5 || argc > 6) {
-      fprintf(stderr, "Usage: %s %s insert <term> <translation> [abbreviation]\n",
+      fprintf(stderr, "Usage: %s %s <term> <translation> [abbreviation]\n",
               progname, argv[2]);
       exit(1);
     }
     char *term = argv[3];
     char *translation = argv[4];
-    char *abbr = argc == 5 ? argv[5] : NULL;
+    char *abbr = argc >= 5 ? argv[5] : NULL;
     struct dictionary *dict = dict_or_death(file);
     struct term *terms = malloc((dict->num_terms+1)*sizeof(struct term));
     memcpy(terms,dict->terms,dict->num_terms*sizeof(struct term));
