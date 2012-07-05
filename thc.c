@@ -68,12 +68,9 @@ void print_escaped(const char *s) {
 
 void print_tree(struct node *tree, int depth) {
   if (tree->type == TEXT) {
-    pad(depth);
     print_escaped(tree->data.text);
-    printf("\n");
   } else {
     struct list *list;
-    pad(depth);
     printf("<%s", tree->data.tag.name);
     list = tree->data.tag.attrs;
     while (list) {
@@ -87,13 +84,31 @@ void print_tree(struct node *tree, int depth) {
     if ( tree->data.tag.children == NULL )
       printf(" />\n");
     else {
-      printf(">\n");
+      int hastag = 0;
+      int wastext = 0;
+      printf(">");
+      /* verify that the tag's children contain at least one tag,
+       * i.e. not a textnode.  Verify this by checking the first
+       * and/or the second child. */
+      if (((struct node*)tree->data.tag.children->data)->type != TEXT
+          || (tree->data.tag.children->next != NULL
+            && ((struct node*)tree->data.tag.children->next->data)->type != TEXT))
+        hastag = 1;
+      if ( hastag==1 )
+        printf("\n");
       list = tree->data.tag.children;
       while (list) {
+        if ( hastag==1 && wastext==0 )
+          pad(depth+2);
         print_tree((struct node*)list->data, depth+2);
+        if ( ((struct node*)list->data)->type == TEXT )
+          wastext = 1;
+        else
+          wastext = 0;
         list = list->next;
       }
-      pad(depth);
+      if ( hastag==1 && wastext==0 )
+        pad(depth);
       printf("</%s>\n", tree->data.tag.name);
     }
   }
