@@ -111,11 +111,12 @@ int pagemain(int argc, char** argv) {
                   if (strchr(term, '|') != NULL) {
                     term = blank_char(term, '|');
                   }
+                  TEXT(dict->terms[i].term);
                   if (dict->terms[i].abbr) {
-                    TAG(("abbr", "title", dict->terms[i].term),
-                        TEXT(dict->terms[i].abbr));
-                  } else {
-                    TEXT(dict->terms[i].term);
+                    TAG(("span", "class", "abbr"),
+                      TAG(("abbr", "title", dict->terms[i].term),
+                          TEXT(dict->terms[i].abbr))
+                    );
                   })
                 TAG(("dd"), TEXT(parse_translation(dict->terms[i].translation)));
             });
