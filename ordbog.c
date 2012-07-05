@@ -114,8 +114,10 @@ int pagemain(int argc, char** argv) {
                   TEXT(dict->terms[i].term);
                   if (dict->terms[i].abbr) {
                     TAG(("span", "class", "abbr"),
+                      TEXT("(")
                       TAG(("abbr", "title", dict->terms[i].term),
                           TEXT(dict->terms[i].abbr))
+                      TEXT(")")
                     );
                   })
                 TAG(("dd"), TEXT(parse_translation(dict->terms[i].translation)));
