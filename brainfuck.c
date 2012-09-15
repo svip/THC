@@ -91,7 +91,7 @@ int pagemain(int argc, char** argv) {
   struct html_builder *builder = &builderv;
   UNUSED(argc);
   UNUSED(argv);
-  char* output[MAXOUTPUT];
+  char* output[MAXOUTPUT] = { 0 };
   
   webpage_start(builder, "Brainfuck", "Brainfuck-fortolker");
 

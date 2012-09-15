@@ -352,9 +352,11 @@ struct dictionary* read_dictionary(const char *path) {
 }
 
 void sprintbf(char *dest, const char *s) {
-  // CRAPPY IMPLEMENTATION
-  
-  dest = printbf("%s%s", dest, s);
+  // CRAPPY, UNSAFE AND SLOW IMPLEMENTATION
+  // GOOD THING IT'S NOT MY SERVER
+  char *v = printbf("%s%s", dest, s);
+  strcpy(dest+strlen(dest), v);
+  free(v);
 }
 
 char* printbf(const char *s, ...) {
