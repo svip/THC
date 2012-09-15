@@ -102,6 +102,8 @@ void translate_brainfuck ( char *output, char *code ) {
 
 void fix_data ( char *data ) {
   data = replace(data, "brainfuck-program=", "");
+  // YES YES, THE SUBMIT VALUE REMAINS, BUT NONE OF ITS
+  // CHARACTERS ARE BRAINFUCK CHARACTERS.  WHO CARES?!
   data = replace(data, "&brainfuck-submit=", "");
 }
 
