@@ -354,7 +354,7 @@ struct dictionary* read_dictionary(const char *path) {
 void sprintbf(char *dest, const char *s) {
   // CRAPPY IMPLEMENTATION
   
-  printbf(dest, "%s%s", dest, s);
+  dest = printbf("%s%s", dest, s);
 }
 
 char* printbf(const char *s, ...) {

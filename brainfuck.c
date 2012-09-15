@@ -28,6 +28,8 @@ void uudecode ( char *src, char *last, char *dest ) {
 }
 
 void translate_brainfuck ( char *output, char *code ) {
+  output = "";
+  
   sprintbf(output, "#include <stdio.h>\n#include <stdlib.h>\n\nint main (int argc, char** argv) {\nUNUSED(argc);\nUNUSED(argv);\nunsigned char* ptr;\n\n");
   
   for (int codep = 0; code[codep] != 0; codep++) {
@@ -101,7 +103,7 @@ int pagemain(int argc, char** argv) {
     if ( getenv("CONTENT_LENGTH") != NULL ) {
       if ( handle_postdata(*output) == 0 ) {
     TAG(("p", "style", "font-weight: bold;"), TEXT("Her er dit nye C-program:"));
-    TAG(("pre"), TEXT(output))
+    TAG(("pre"), TEXT(output));
       } else {
     TAG(("p", "style", "font-weight: bold;"), TEXT("Hva sulan!  Dit Brainfuck-kode kunne ikke oversættes til C!"));
       }
