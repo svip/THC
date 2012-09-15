@@ -11,6 +11,44 @@ const char *source_file = __FILE__;
 #define MAXINPUT MAXLEN+2
 #define MAXOUTPUT MAXINPUT*2
 
+/* Copied from http://www.daniweb.com/software-development/c/code/216517/strings-search-and-replace */
+char *replace ( const char *src, const char *from, const char *to ) {
+  size_t size = strlen(src) + 1;
+  size_t fromlen = strlen(from);
+  size_t tolen = strlen(to);
+  char *value = malloc(size);
+  char *dst = value;
+  if ( value != NULL ) {
+    for ( ;; ) {
+      const char *match = strstr(src, from);
+      if ( match != NULL )
+        {
+        size_t count = match - src;
+        char *temp;
+        size += tolen - fromlen;
+        temp = realloc(value, size);
+        if ( temp == NULL ) {
+          free(value);
+          return NULL;
+        }
+        dst = temp + (dst - value);
+        value = temp;
+        memmove(dst, src, count);
+        src += count;
+        dst += count;
+        memmove(dst, to, tolen);
+        src += fromlen;
+        dst += tolen;
+      } else {
+        /* No match */
+        strcpy(dst, src);
+        break;
+      }
+    }
+  }
+  return value;
+}
+
 void uudecode ( char *src, char *last, char *dest ) {
   for (; src < last && *src; src++, dest++) {
     if (*src == '+')
@@ -62,6 +100,11 @@ void translate_brainfuck ( char *output, char *code ) {
   strappend(output, "return 0;\n}\n");
 }
 
+void fix_data ( char *data ) {
+  data = replace(data, "brainfuck-program=", "");
+  data = replace(data, "&brainfuck-submit=", "");
+}
+
 int handle_postdata ( char *output ) {
   char *lenstr, *dump;
   char input[MAXINPUT], data[MAXINPUT];
@@ -78,6 +121,8 @@ int handle_postdata ( char *output ) {
     return 1;
   
   uudecode(input, input+len, data);
+  
+  fix_data(data);
   
   translate_brainfuck(output, data);
   
@@ -110,7 +155,7 @@ int pagemain(int argc, char** argv) {
       TAG(("fieldset"),
         TAG(("legend"), TEXT("Brainfuck til C"));
         TAG(("label", "for", "brainfuck-program"), TEXT("Programmet:"));
-        TAG(("textarea", "type", "text", "id", "brainfuck-program", "name", "brainfuck-program"), TEXT(""));
+        TAG(("textarea", "type", "text", "id", "brainfuck-program", "name", "brainfuck-program", "rows", "15", "cols", "52"), TEXT(""));
         TAG(("input", "type", "submit", "name", "brainfuck-submit", "value", "Oversæt!"), );
         )
       )
