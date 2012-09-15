@@ -91,7 +91,7 @@ int pagemain(int argc, char** argv) {
   struct html_builder *builder = &builderv;
   UNUSED(argc);
   UNUSED(argv);
-  char* output[MAXOUTPUT] = { 0 };
+  char output[MAXOUTPUT] = { 0 };
   
   webpage_start(builder, "Brainfuck", "Brainfuck-fortolker");
 
@@ -101,7 +101,7 @@ int pagemain(int argc, char** argv) {
     TAG(("p"), TEXT("Har du også svært ved at programmere i C, men kan sagtens finde ud af at programmere i Brianfuck?"));
     TAG(("p"), TEXT("Så er denne fortolker noget for dig!"));
     if ( getenv("CONTENT_LENGTH") != NULL ) {
-      if ( handle_postdata(*output) == 0 ) {
+      if ( handle_postdata(output) == 0 ) {
     TAG(("p", "style", "font-weight: bold;"), TEXT("Her er dit nye C-program:"));
     TAG(("pre"), TEXT(output));
       } else {
