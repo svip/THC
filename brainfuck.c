@@ -65,7 +65,16 @@ void uudecode ( char *src, char *last, char *dest ) {
   *++dest = '\0';
 }
 
+void fix_data ( char *data ) {
+  data = replace(data, "brainfuck-program=", "");
+  // YES YES, THE SUBMIT VALUE REMAINS, BUT NONE OF ITS
+  // CHARACTERS ARE BRAINFUCK CHARACTERS.  WHO CARES?!
+  data = replace(data, "&brainfuck-submit=", "");
+}
+
 void translate_brainfuck ( char *output, char *code ) {
+  fix_data(code);
+  
   strappend(output, "#include <stdio.h>\n#include <stdlib.h>\n\nint main (int argc, char** argv) {\nUNUSED(argc);\nUNUSED(argv);\nunsigned char* ptr;\n\n");
   
   for (int codep = 0; code[codep] != 0; codep++) {
@@ -100,13 +109,6 @@ void translate_brainfuck ( char *output, char *code ) {
   strappend(output, "return 0;\n}\n");
 }
 
-void fix_data ( char *data ) {
-  data = replace(data, "brainfuck-program=", "");
-  // YES YES, THE SUBMIT VALUE REMAINS, BUT NONE OF ITS
-  // CHARACTERS ARE BRAINFUCK CHARACTERS.  WHO CARES?!
-  data = replace(data, "&brainfuck-submit=", "");
-}
-
 int handle_postdata ( char *output ) {
   char *lenstr, *dump;
   char input[MAXINPUT], data[MAXINPUT];
@@ -123,8 +125,6 @@ int handle_postdata ( char *output ) {
     return 1;
   
   uudecode(input, input+len, data);
-  
-  fix_data(data);
   
   translate_brainfuck(output, data);
   
