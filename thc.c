@@ -351,12 +351,8 @@ struct dictionary* read_dictionary(const char *path) {
   }
 }
 
-void sprintbf(char *dest, const char *s) {
-  // CRAPPY, UNSAFE AND SLOW IMPLEMENTATION
-  // GOOD THING IT'S NOT MY SERVER
-  char *v = printbf("%s%s", dest, s);
-  strcpy(dest+strlen(dest), v);
-  free(v);
+void strappend(char *dest, const char *s) {
+  strcpy(dest+strlen(dest), s);
 }
 
 char* printbf(const char *s, ...) {

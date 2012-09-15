@@ -108,7 +108,7 @@ int write_dictionary(const char *path, struct dictionary *dict);
 
 struct dictionary* read_dictionary(const char *path);
 
-void sprintbf(char *dest, const char *s);
+void strappend(char *dest, const char *s);
 
 char* printbf(const char *s, ...);
 

@@ -28,38 +28,38 @@ void uudecode ( char *src, char *last, char *dest ) {
 }
 
 void translate_brainfuck ( char *output, char *code ) {
-  sprintbf(output, "#include <stdio.h>\n#include <stdlib.h>\n\nint main (int argc, char** argv) {\nUNUSED(argc);\nUNUSED(argv);\nunsigned char* ptr;\n\n");
+  strappend(output, "#include <stdio.h>\n#include <stdlib.h>\n\nint main (int argc, char** argv) {\nUNUSED(argc);\nUNUSED(argv);\nunsigned char* ptr;\n\n");
   
   for (int codep = 0; code[codep] != 0; codep++) {
     switch(code[codep]) {
     case '+':
-      sprintbf(output, "(*ptr)++;\n");
+      strappend(output, "(*ptr)++;\n");
       break;
     case '-':
-      sprintbf(output, "(*ptr)--;\n");
+      strappend(output, "(*ptr)--;\n");
       break;
     case '>':
-      sprintbf(output, "ptr++;\n");
+      strappend(output, "ptr++;\n");
       break;
     case '<':
-      sprintbf(output, "ptr--;\n");
+      strappend(output, "ptr--;\n");
       break;
     case '.':
-      sprintbf(output, "putchar(*ptr);\n");
+      strappend(output, "putchar(*ptr);\n");
       break;
     case ',':
-      sprintbf(output, "*ptr=getchar();\n");
+      strappend(output, "*ptr=getchar();\n");
       break;
     case '[':
-      sprintbf(output, "while (*ptr) {\n");
+      strappend(output, "while (*ptr) {\n");
       break;
     case ']':
-      sprintbf(output, "}\n");
+      strappend(output, "}\n");
       break;
     }
   }
   
-  sprintbf(output, "return 0;\n}\n");
+  strappend(output, "return 0;\n}\n");
 }
 
 int handle_postdata ( char *output ) {
