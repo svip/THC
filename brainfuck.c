@@ -6,7 +6,6 @@
 
 const char *source_file = __FILE__;
 
-#define DATA_DIR "/var/www/topdatamat/c/data"
 #define MAXLEN 5000
 /* For adding line breaking and trailing NUL */
 #define MAXINPUT MAXLEN+2
@@ -29,38 +28,38 @@ void uudecode ( char *src, char *last, char *dest ) {
 }
 
 void translate_brainfuck ( char *output, char *code ) {
-  printbf(output, "#include <stdio.h>\n#include <stdlib.h>\n\nint main (int argc, char** argv) {\nunsigned char* ptr;\n\n");
+  sprintbf(output, "#include <stdio.h>\n#include <stdlib.h>\n\nint main (int argc, char** argv) {\nUNUSED(argc);\nUNUSED(argv);\nunsigned char* ptr;\n\n");
   
   for (int codep = 0; code[codep] != 0; codep++) {
     switch(code[codep]) {
     case '+':
-      printbf(output, "(*ptr)++;\n");
+      sprintbf(output, "(*ptr)++;\n");
       break;
     case '-':
-      printbf(output, "(*ptr)--;\n");
+      sprintbf(output, "(*ptr)--;\n");
       break;
     case '>':
-      printbf(output, "ptr++;\n");
+      sprintbf(output, "ptr++;\n");
       break;
     case '<':
-      printbf(output, "ptr--;\n");
+      sprintbf(output, "ptr--;\n");
       break;
     case '.':
-      printbf(output, "putchar(*ptr);\n");
+      sprintbf(output, "putchar(*ptr);\n");
       break;
     case ',':
-      printbf(output, "*ptr=getchar();\n");
+      sprintbf(output, "*ptr=getchar();\n");
       break;
     case '[':
-      printbf(output, "while (*ptr) {\n");
+      sprintbf(output, "while (*ptr) {\n");
       break;
     case ']':
-      printbf(output, "}\n");
+      sprintbf(output, "}\n");
       break;
     }
   }
   
-  printbf(output, "return 0;\n}\n");
+  sprintbf(output, "return 0;\n}\n");
 }
 
 int handle_postdata ( char *output ) {
