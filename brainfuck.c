@@ -28,8 +28,6 @@ void uudecode ( char *src, char *last, char *dest ) {
 }
 
 void translate_brainfuck ( char *output, char *code ) {
-  output = "";
-  
   sprintbf(output, "#include <stdio.h>\n#include <stdlib.h>\n\nint main (int argc, char** argv) {\nUNUSED(argc);\nUNUSED(argv);\nunsigned char* ptr;\n\n");
   
   for (int codep = 0; code[codep] != 0; codep++) {
