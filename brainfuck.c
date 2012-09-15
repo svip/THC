@@ -65,15 +65,11 @@ void uudecode ( char *src, char *last, char *dest ) {
   *++dest = '\0';
 }
 
-void fix_data ( char *data ) {
-  data = replace(data, "brainfuck-program=", "");
+void translate_brainfuck ( char *output, char *code ) {
+  code = replace(code, "brainfuck-program=", "");
   // YES YES, THE SUBMIT VALUE REMAINS, BUT NONE OF ITS
   // CHARACTERS ARE BRAINFUCK CHARACTERS.  WHO CARES?!
-  data = replace(data, "&brainfuck-submit=", "");
-}
-
-void translate_brainfuck ( char *output, char *code ) {
-  fix_data(code);
+  code = replace(code, "&brainfuck-submit=Oversæt!", "");
   
   strappend(output, "#include <stdio.h>\n#include <stdlib.h>\n\nint main (int argc, char** argv) {\nUNUSED(argc);\nUNUSED(argv);\nunsigned char* ptr;\n\n");
   
