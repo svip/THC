@@ -15,18 +15,19 @@ int pagemain(int argc, char** argv) {
   TAG(("article"),
     TAG(("header"),
       TAG(("h1"),
-        TAG(("b"), TEXT("topDatamat 0x1"));
-        TEXT(" udgivet! (");
+        TAG(("b"), TEXT("topDatamat 0x2"));
+        TEXT(" (del 0/1) udgivet!");
+/*        TEXT(" udgivet! (");
         TAG(("a", "href", "http://youtube.com/watch?v=TTVCaZVUvC0"),
           TEXT("Click here for English subtitles"))
-        TEXT(")")));
+        TEXT(")")));*/));
     TAG(("div", "class", "post"),
-      webpage_youtubeembed(builder, "F3HHS50dA6g", 853, 480);
-      TAG(("p"), TEXT("Så er andet afsnit af topDatamat her endeligt!"));
+      webpage_youtubeembed(builder, "a0v4xMElWS8", 853, 480);
+      TAG(("p"), TEXT("Så er første del af GOTO-konference-afsnitte af topDatamat her endeligt!"));
       TAG(("p"),
         TEXT("Nyd det her eller ")
-        TAG(("a", "href", "https://www.youtube.com/watch?v=F3HHS50dA6g"), TEXT("direkte på YouTube"))
-        TEXT("."))))
+        TAG(("a", "href", "https://www.youtube.com/watch?v=a0v4xMElWS8"), TEXT("direkte på YouTube"))
+        TEXT("."))));
 
   webpage_end(builder);
   print_tree(builder->top_node, 0);
