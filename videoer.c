@@ -92,7 +92,7 @@ struct season* videos_init() {
   UNUSED(working_episode);
   working_episode = append_episode(current_season, 2,
                                  "a0v4xMElWS8", "GOTO Aarhus 2012; del 0/1",
-                                 NULL, NULL);
+                                 "KI-XrxabmhM", "GOTO Aarhus 2012; part 0/1");
   UNUSED(working_episode);
   /* 
   append_specialepisode(working_episode,

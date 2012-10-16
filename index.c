@@ -16,11 +16,10 @@ int pagemain(int argc, char** argv) {
     TAG(("header"),
       TAG(("h1"),
         TAG(("b"), TEXT("topDatamat 0x2"));
-        TEXT(" (del 0/1) udgivet!");
-/*        TEXT(" udgivet! (");
-        TAG(("a", "href", "http://youtube.com/watch?v=TTVCaZVUvC0"),
+        TEXT(" (del 0/1) udgivet! (");
+        TAG(("a", "href", "http://youtube.com/watch?v=KI-XrxabmhM"),
           TEXT("Click here for English subtitles"))
-        TEXT(")")));*/));
+        TEXT(")")));
     TAG(("div", "class", "post"),
       webpage_youtubeembed(builder, "a0v4xMElWS8", 853, 480);
       TAG(("p"), TEXT("Så er første del af GOTO-konference-afsnitte af topDatamat her endeligt!"));
