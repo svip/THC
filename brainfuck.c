@@ -139,7 +139,7 @@ int pagemain(int argc, char** argv) {
   TAG(("article"),
     TAG(("header"),
       TAG(("h1"), TEXT("Brainfuck-fortolker"));
-    TAG(("p"), TEXT("Har du også svært ved at programmere i C, men kan sagtens finde ud af at programmere i Brianfuck?"));
+    TAG(("p"), TEXT("Har du også svært ved at programmere i C, men kan sagtens finde ud af at programmere i Brainfuck?"));
     TAG(("p"), TEXT("Så er denne fortolker noget for dig!"));
     if ( getenv("CONTENT_LENGTH") != NULL ) {
       if ( handle_postdata(output) == 0 ) {
