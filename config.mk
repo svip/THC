@@ -11,4 +11,4 @@ CFLAGS   = -ansi -pedantic -Wall -Wextra -Werror -Os ${INCS} ${CPPFLAGS} -std=c9
 LDFLAGS  = -s ${LIBS}
 
 # compiler and linker
-CC = gcc
+CC = cc

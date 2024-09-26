@@ -18,21 +18,17 @@ install: ${PAGES}
 	@mv ${PAGES} www
 
 .c.o:
-	@echo CC -c $<
-	@${CC} -c $< ${CFLAGS}
+	${CC} -c $< ${CFLAGS}
 
 %.thc: %.o thc.o runner.o
-	@echo CC -o $@ $< thc.o runner.o
-	@${CC} -o $@ $< thc.o runner.o ${CFLAGS}
+	${CC} -o $@ $< thc.o runner.o ${CFLAGS}
 
 dictutil: dictutil.o thc.o
-	@echo CC -o $@ $< thc.o
-	@${CC} -o $@ $< thc.o ${CFLAGS}
+	${CC} -o $@ $< thc.o ${CFLAGS}
 
 ${OBJ}: config.mk
 
 clean:
-	@echo cleaning
-	@rm -f ${PAGES} ${OBJ} ${PROGS}
+	rm -f ${PAGES} ${OBJ} ${PROGS}
 
 .PHONY: all clean dist
