@@ -31,7 +31,7 @@ char *replace ( const char *src, const char *from, const char *to ) {
           free(value);
           return NULL;
         }
-        dst = temp + (dst - value);
+        dst = temp + (dst - temp);
         value = temp;
         memmove(dst, src, count);
         src += count;
