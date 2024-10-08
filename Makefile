@@ -1,7 +1,7 @@
 include config.mk
 
 PROGS = dictutil
-PAGES = index.thc om.thc videoer.thc ordbog.thc fanfiction.thc brainfuck.thc
+PAGES = index.thc om.thc videoer.thc ordbog.thc fanfiction.thc brainfuck.thc nu.thc
 SRC = ${PAGES:.thc=.c} thc.c runner.c
 OBJ = ${SRC:.c=.o}
 
