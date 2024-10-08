@@ -17,7 +17,7 @@ int pagemain(int argc, char** argv) {
           TAG(("h1"), TEXT("Hvor er de nu?");))
       TAG(("article"),
           TAG(("p"),
-              TEXT("Meget er sket siden topDatamat udkom i 2011. Men hvad er der egentlig blevet af værterne siden vi forlod dem i kælderen under DIKU?? Det vil vi her prøve at kaste lys over."))
+              TEXT("Meget er sket siden topDatamat udkom i 2011. Men hvad er der egentlig blevet af værterne siden vi forlod dem i kælderen under DIKU? Det vil vi her prøve at kaste lys over."))
           TAG(("h2"), TEXT("Truls"))
           TAG(("p"),
                TEXT("Efter mange år kunne Truls ikke længere udsætte sit biologiske ur, og han forlod kælderen fulgte sine instinkter tilbage til Norge hvor han tog sig en PhD i Trondhjem."))
