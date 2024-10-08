@@ -10,7 +10,7 @@ int pagemain(int argc, char** argv) {
   UNUSED(argc);
   UNUSED(argv);
 
-  webpage_start(builder, "Nu", "Om");
+  webpage_start(builder, "Now", "Nu");
 
   TAG(("article"),
       TAG(("header"),
